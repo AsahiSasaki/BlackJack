@@ -7,6 +7,7 @@
 <title>ユーザー管理</title>
 </head>
 <body>
+<a href="Menue.jsp">メニューに戻る</a>
 <p>現在ログインしているユーザーを削除します。</p>
 <form action="UserManagementServlet" method="post">
 <p><input type="submit" value="削除"/> </p>

@@ -7,16 +7,19 @@
 <title>メニュー</title>
 </head>
 <body>
-<% String message = (String)session.getAttribute("loginuser"); 
-	if(message != null){ %>
-	<p><%= message %>さんこんにちは</p>
-	<% 
-	} %>
+<% String message = (String)session.getAttribute("loginuser");  %>
+<p><%= message %>さんこんにちは</p>
+	
+
 Play<br>
-戦績<br>
+
+<p><a href="BattleRecordServlet" >戦績</a><p>
+
 <a href="UserManagement.jsp">ユーザー管理</a>
+
 <form action="LoginServlet">
 	<input type="submit" value="ログアウト"/></p>
 </form>
+
 </body>
 </html>

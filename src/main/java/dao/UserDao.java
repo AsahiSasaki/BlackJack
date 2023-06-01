@@ -16,7 +16,7 @@ public class UserDao extends BaseDao {
 	public User doLogin(int userId, String loginPassword) throws DataBaseException {
 			
 		//初期状態としてloginUserはいないよってUser型
-		User loginUser =null;
+		User loginUser = null;
 			
 		try {
 				
@@ -33,7 +33,7 @@ public class UserDao extends BaseDao {
 				String PlayerId = rs.getString("user_id");
 				String userNickname = rs.getString("user_nickname");
 				String userPassword = rs.getString("login_password");
-				loginUser = new User(PlayerId, userNickname, userPassword);
+				loginUser = new User(PlayerId, userPassword, userNickname);
 			}	
 			//loginUserがnull(つまりデータベースに登録されてない人)だったらCampusExceptionを返す
 			if(loginUser == null) {
@@ -47,7 +47,7 @@ public class UserDao extends BaseDao {
 		}
 	
 	//ユーザーを新規登録する際に、入力されたIDが既に使われていないか探す
-	public String findMemoId(int userId) throws DataBaseException{
+	public String findUserId(int userId) throws DataBaseException{
 		//メモIDの初期化
 		String loginId = null;
 		try{
@@ -102,5 +102,100 @@ public class UserDao extends BaseDao {
 		}
 	}
 	
+	//ユーザーの対戦回数を取得するメソッド
+	public int getMatchCount(int userId) throws DataBaseException{
+		int matchCount = 0;
+		
+		try {
+			String sql = "select match_count from user where user_id = ? ";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				matchCount = rs.getInt("match_count");
+			}	
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new DataBaseException("対戦回数を取得できませんでした");
+		}
+		return matchCount;
+	}
+	
+	//ユーザーの勝利回数を取得するメソッド
+	public int getWinCount(int userId) throws DataBaseException{
+		int winCount = 0;
+			
+		try {
+			String sql = "select win_count from user where user_id = ? ";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
+				
+			while(rs.next()) {
+				winCount = rs.getInt("win_count");
+			}	
+				
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new DataBaseException("勝利数を取得できませんでした");
+		}
+		return winCount;
+	}
+		
+	//ユーザーの敗北数を取得するメソッド
+	public int getLoseCount(int userId) throws DataBaseException{
+		int loseCount = 0;
+					
+		try {
+			String sql = "select lose_count from user where user_id = ? ";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
+			
+			while(rs.next()) {
+				loseCount = rs.getInt("lose_count");
+				}	
+						
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new DataBaseException("敗北数を取得できませんでした");
+		}
+		return loseCount;
+	}
+	
+	//ユーザーの引き分け数を取得するメソッド
+	public int getDrawCount(int userId) throws DataBaseException{
+		int drawCount = getMatchCount(userId) - getWinCount(userId) - getLoseCount(userId);
+		return drawCount;
+	}
+		
+	//ユーザーの勝率を取得するメソッド
+	public double getWinRate(int userId) throws DataBaseException{
+		double winRate = 100*(double)getWinCount(userId)/getMatchCount(userId);
+		return winRate;
+	}
+	
+	//ユーザーのニックネームを取得するメソッド
+	public String getNickname(int userId) throws DataBaseException{
+		String nickname = null;
+				
+		try {
+			String sql = "select user_nickname from user where user_id = ? ";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
+					
+			while(rs.next()) {
+				nickname = rs.getString("user_nickname");
+			}	
+					
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new DataBaseException("ニックネームを取得できませんでした");
+		}
+		return nickname;
+	}
 
 }
