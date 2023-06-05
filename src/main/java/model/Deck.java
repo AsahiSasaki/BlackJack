@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Deck {
-	public ArrayList<Card> deck;
+	private ArrayList<Card> deck;
 	
-	public enum Suit{
+	private enum Suit{
 		クローバー,
 		ダイヤ,
 		ハート,
@@ -30,9 +30,4 @@ public class Deck {
 		return deck;
 		
 	}
-	
-	public int getDeckSize(ArrayList<Card> deck) {
-		return deck.size();
-	}
-
 }

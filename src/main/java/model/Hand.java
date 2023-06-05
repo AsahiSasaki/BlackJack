@@ -30,4 +30,9 @@ public class Hand {
 		return this.score;
 	}
 	
+	public String showCard(Card card) {
+		String s ="ディーラーが2枚目に引いたカードは"
+			+ card.getSuit() + "の" + card.getRankString()+"です";
+		return s;
+	}
 }

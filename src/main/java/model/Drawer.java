@@ -14,8 +14,8 @@ public class Drawer {
 		Card card = deck.get(0);
 		this.hand.getHand().add(deck.get(0));
 		deck.remove(0);
+		this.hand.calScore();
 		return card;
-		
 	}	
 	
 	public String initialHand(ArrayList<Card> deck) {
@@ -23,8 +23,8 @@ public class Drawer {
 		Card c1 = drawCard(deck);
 		Card c2 = drawCard(deck);
 		
-		return "1枚目に引いたカードは"+ c1.getSuit() + "の" + c1.getRank() +
-				", 2枚目に引いたカードは" + c2.getSuit() + "の" + c2.getRank() + "です";
+		return "あなたが1枚目に引いたカードは"+ c1.getSuit() + "の" + c1.getRankString() +
+				", 2枚目に引いたカードは" + c2.getSuit() + "の" + c2.getRankString() + "です";
 	}
 	
 	public boolean judgeBust() {

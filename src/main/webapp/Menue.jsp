@@ -11,7 +11,7 @@
 <p><%= message %>さんこんにちは</p>
 	
 
-Play<br>
+<a href="BlackJackServlet">Play</a>
 
 <p><a href="BattleRecordServlet" >戦績</a><p>
 
