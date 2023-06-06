@@ -15,11 +15,13 @@ public class Deck {
 	
 	public ArrayList<Card> resetDeck(){
 		ArrayList<Card> deck = new ArrayList<>();
+		for(int j= 0; j<6 ; j++) {
 		for(Suit suit : Suit.values()) { 
 			for(int i = 1; i < 14; i++) {
 				Card card = new Card(suit.toString(), i);
 				deck.add(card);
 			}
+		}
 		}
 		this.deck = deck;
 		return this.deck;

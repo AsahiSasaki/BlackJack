@@ -11,9 +11,8 @@ public class Drawer {
 	}
 	
 	public Card drawCard(ArrayList<Card> deck) {
-		Card card = deck.get(0);
-		this.hand.getHand().add(deck.get(0));
-		deck.remove(0);
+		Card card = deck.remove(0);
+		this.hand.getHand().add(card);
 		this.hand.calScore();
 		return card;
 	}	

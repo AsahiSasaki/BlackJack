@@ -11,7 +11,7 @@ public class Hand {
 		return hand;
 	}
 	
-	public int calScore(){
+	public void calScore(){
 		int num = 0;
 		for(Card h:hand) {
 			if(h.getRank() < 11) {
@@ -22,7 +22,7 @@ public class Hand {
 			}
 		}
 		this.score = num;
-		return this.score;
+	
 	}
 	
 	

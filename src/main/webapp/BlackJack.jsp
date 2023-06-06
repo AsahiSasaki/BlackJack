@@ -13,22 +13,28 @@
 </head>
 <body>
 <h1>ブラック☆ジャック</h1>
-<p><%=session.getAttribute("playerInit") %><p>
-<p><%=session.getAttribute("dealerInit") %><p>
+
+
+<%if(request.getAttribute("playerInit") != null){ %>
+<p><%=request.getAttribute("playerInit") %><p>
+<%} %>
+<%if(request.getAttribute("dealerInit") != null){ %>
+<p><%=request.getAttribute("dealerInit") %><p>
+<%} %>
 
 <%
 ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
 Player player = (Player)session.getAttribute("player");
 Dealer dealer = (Dealer)session.getAttribute("dealer");
+
 %>
-<%if((String)request.getAttribute("message") != null){%>
-		<%=request.getAttribute("message")%>
+<%if(request.getAttribute("drawMessage") != null){%>
+		<p><%=request.getAttribute("drawMessage")%><p>
 	<%
 	}%>
 <%
 
-if((boolean)session.getAttribute("playerTurn") && !player.judgeBust()){
-	player.getHand().calScore();%>
+if((boolean)session.getAttribute("playerTurn") && !player.judgeBust()){%>
 	<p>現在の得点は<%=player.getHand().getScore() %>です。<p>
 	<form action="BlackJackServlet" method="post">
 	<input type="submit" value="ヒット" name="hit">
@@ -38,19 +44,28 @@ if((boolean)session.getAttribute("playerTurn") && !player.judgeBust()){
 <%	
 }%>
 
-<%
-if(player.judgeBust()){%>
-	バーストしました<br>
-	あなたのまけです<br>
+<%int playerScore = player.getHand().getScore(); %>
 
-<%}
+<%
 if(request.getAttribute("playerScore") != null){%>
-	<p>あなたの得点は<%=player.getHand().getScore()%>です<p>
+	<p>あなたの得点は<%=playerScore%>です<p>
 <%}%>
 
+<%
+ArrayList<String> s = (ArrayList<String>)request.getAttribute("dealerAction");
+if(s != null){
+for(String string:s){%>
+<p><%=string %><p>
+<%}
+} %>
 
-<% if(!(boolean)session.getAttribute("playerTurn")){%>
-	<a href="BlackJackServlet">next game</a>
+<%if(request.getAttribute("result") != null){%>
+<p><%=request.getAttribute("result")%><p></p>
+<%}%>
+
+<% if(!(boolean)session.getAttribute("playGame")){%>
+	<a href="BlackJackServlet">next game</a><br>
+	<a href="Menue.jsp">メニューに戻る</a>
 <% }%>
 
 

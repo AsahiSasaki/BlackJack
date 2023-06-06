@@ -46,6 +46,9 @@ public class Test {
 				System.out.println(pScore +"対" + dScore + "引き分け");
 			}
 		}	
+		
+		
+		
 	}
 
 }

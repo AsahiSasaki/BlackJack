@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class Player extends Drawer {
 	private boolean stand = false;
+	private String result = null;
 	
 	public Player() {
 		super();
@@ -16,6 +17,14 @@ public class Player extends Drawer {
 	
 	public void setStand() {
 		this.stand = true;
+	}
+	
+	public void setResult(String result) {
+		this.result = result;
+	}
+	
+	public String getResult() {
+		return result;
 	}
 	//Playerはスタンドするかバーストするまで引く
 	public void action(ArrayList<Card> deck, Hand hand) {
@@ -39,6 +48,11 @@ public class Player extends Drawer {
 		String action = scan.nextLine();
 		if(action.equals("s")){
 			this.stand = true;
+		}else if(action.equals("h")) {
+			//何もしない
+		}else {
+			System.out.println("入力が間違っています");
+			selectAction();
 		}
 	}
 }
