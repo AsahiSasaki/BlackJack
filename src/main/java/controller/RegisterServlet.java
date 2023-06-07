@@ -52,10 +52,7 @@ public class RegisterServlet extends HttpServlet {
 			}
 		}else {
 			request.setAttribute("message", "パスワードが一致しません");
-		}
-		
-		
-		
+		}	
 		
 		RequestDispatcher rd = request.getRequestDispatcher(next);
 		rd.forward(request, response);

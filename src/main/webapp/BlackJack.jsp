@@ -14,6 +14,12 @@
 <body>
 <h1>ブラック☆ジャック</h1>
 
+<%
+ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
+Player player = (Player)session.getAttribute("player");
+Dealer dealer = (Dealer)session.getAttribute("dealer");
+%>
+
 
 <%if(request.getAttribute("playerInit") != null){ %>
 <p><%=request.getAttribute("playerInit") %><p>
@@ -22,40 +28,44 @@
 <p><%=request.getAttribute("dealerInit") %><p>
 <%} %>
 
-<%
-ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
-Player player = (Player)session.getAttribute("player");
-Dealer dealer = (Dealer)session.getAttribute("dealer");
 
-%>
-<%if(request.getAttribute("drawMessage") != null){%>
-		<p><%=request.getAttribute("drawMessage")%><p>
+
+<%
+if(request.getAttribute("drawMessage") != null){%>
+	<p><%=request.getAttribute("drawMessage")%><p>
+<%
+}%>
+
+<%
+if((boolean)session.getAttribute("playerTurn")){%>
+	現在の手札<br>
+	<%=player.getStringHand() %>
+	<% 
+	if(player.getHand().getExistA() && player.getHand().getMaxScore() < 21) {%>
+		<p>現在の得点は<%=player.getHand().getMinScore() %>/<%= player.getHand().getMaxScore()%>です。<p>
+	<%
+	}else {%>
+		<p>現在の得点は<%=player.getHand().getFinalScore() %>です。<p>
 	<%
 	}%>
-<%
 
-if((boolean)session.getAttribute("playerTurn") && !player.judgeBust()){%>
-	<p>現在の得点は<%=player.getHand().getScore() %>です。<p>
 	<form action="BlackJackServlet" method="post">
 	<input type="submit" value="ヒット" name="hit">
 	<input type="submit" value="スタンド" name = "stand">
-	</form>
-		
+	</form>	
 <%	
 }%>
 
-<%int playerScore = player.getHand().getScore(); %>
-
 <%
 if(request.getAttribute("playerScore") != null){%>
-	<p>あなたの得点は<%=playerScore%>です<p>
+	<p>あなたの得点は<%=player.getHand().getFinalScore()%>です<p>
 <%}%>
 
 <%
-ArrayList<String> s = (ArrayList<String>)request.getAttribute("dealerAction");
-if(s != null){
-for(String string:s){%>
-<p><%=string %><p>
+ArrayList<String> dealerAction = (ArrayList<String>)request.getAttribute("dealerAction");
+if(dealerAction != null){
+for(String s:dealerAction){%>
+<p><%=s %><p>
 <%}
 } %>
 

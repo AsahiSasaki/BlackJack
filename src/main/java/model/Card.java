@@ -23,6 +23,10 @@ public class Card {
 		return rankString;
 	}
 	
+	public String getDisplayName() {
+		return suit + "の" + rankString;
+	}
+	
 	private String changePicture(int rank) {
 		switch (rank) {
 		case 1:

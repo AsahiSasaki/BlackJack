@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Player extends Drawer {
+	private ArrayList<String> stringHand = new ArrayList<>();
 	private boolean stand = false;
 	private String result = null;
 	
@@ -26,19 +27,44 @@ public class Player extends Drawer {
 	public String getResult() {
 		return result;
 	}
+	
 	//Playerはスタンドするかバーストするまで引く
 	public void action(ArrayList<Card> deck, Hand hand) {
 
 		while(!stand && !judgeBust()) {
-			hand.calScore();
-			System.out.println("現在の点数は"+hand.getScore()+"です");
+		
+			if(hand.getExistA() && hand.getMaxScore() < 21) {
+				System.out.println("現在の点数は"+hand.getMinScore()+"/"+hand.getMaxScore()+"です");
+			}else {
+				System.out.println("現在の点数は"+hand.getFinalScore()+"です");
+			}
+			
 			selectAction();
 			if(stand) {
 				break;
 			}
 			Card c1 = drawCard(deck);
-			System.out.println(c1.getSuit() + "の" + c1.getRankString()+"を引きました");
+			System.out.println(c1.getDisplayName() + "を引きました");
 		}
+	}
+	
+	public String initialHand(ArrayList<Card> deck) {
+		
+		Card c1 = drawCard(deck);
+		Card c2 = drawCard(deck);
+		addStringHand(c1);
+		addStringHand(c2);
+			
+		return "あなたが1枚目に引いたカードは"+ c1.getSuit() + "の" + c1.getRankString() +
+				", 2枚目に引いたカードは" + c2.getSuit() + "の" + c2.getRankString() + "です";
+	}
+	
+	public void addStringHand(Card card) {
+		stringHand.add(card.getDisplayName());
+	}
+	
+	public ArrayList<String> getStringHand(){
+		return stringHand;
 	}
 	
 	//スタンドかヒットか入力して決めてもらう

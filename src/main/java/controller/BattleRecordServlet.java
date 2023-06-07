@@ -52,11 +52,6 @@ public class BattleRecordServlet extends HttpServlet {
 			
 		RequestDispatcher rd = request.getRequestDispatcher("BattleRecord.jsp");
 		rd.forward(request, response);
-		
-		
+			
 	}
-
-	
-	
-
 }

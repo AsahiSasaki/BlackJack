@@ -3,69 +3,78 @@ package model;
 import java.util.ArrayList;
 
 public class Dealer extends Drawer{
-	private ArrayList<String> message = new ArrayList<>();
+	private ArrayList<String> actionMessage = new ArrayList<>();
 	
 	public Dealer() {
 		super();
 	}
 	
 	public void  action(ArrayList<Card> deck, Hand hand) {
-		message.add(scoreMessage(hand));
-		while(hand.getScore() < 17) {
+		actionMessage.add(scoreMessage(hand));
+		while(hand.getFinalScore() < 17) {
 			Card card = drawCard(deck);
-			message.add(cardMessage(card));
-			message.add(scoreMessage(hand));
+			actionMessage.add(cardMessage(card));
+			if(!judgeBust()) {
+				actionMessage.add(scoreMessage(hand));
+			}
 		}
 	}
 	
-	public ArrayList<String> getMessage(){
-		return message;
+	public ArrayList<String> getActionMessage(){
+		return actionMessage;
 	}
 	
 	public String initialHand(ArrayList<Card> deck) {
 		
 		Card c1 = drawCard(deck);
-		drawCard(deck);
+		Card c2 = drawCard(deck);
 		
-		return "ディーラーが1枚目に引いたカードは"+ c1.getSuit() + "の" + c1.getRankString() +
+		actionMessage.add("ディーラーが１枚目に引いたカードは"+ c1.getDisplayName());
+		actionMessage.add("２枚目に引いたカードは"+ c2.getDisplayName()+ "でした");
+		
+		return "ディーラーが1枚目に引いたカードは"+ c1.getDisplayName() +
 				", 2枚目に引いたカードは分かりません";
 	}
 	
 	public String cardMessage(Card card) {
-		return card.getSuit() + "の" + card.getRankString() + "を引きました";
+		return card.getDisplayName()+ "を引きました";
 	}
 	
 	public String scoreMessage(Hand hand) {
-		return "ディーラーの現在の点数は"+hand.getScore()+"です";
+		if(hand.getExistA() && hand.getMaxScore() < 17) {
+			return "ディーラーの現在の点数は"+hand.getMinScore()+"/"+hand.getMaxScore()+"です";
+		}else {
+			return "ディーラーの現在の点数は"+hand.getFinalScore()+"です";
+		}
 	}
 	
 	public String compareScore(Player player) {
-		int playerScore = player.getHand().getScore();
-		int dealerScore = this.getHand().getScore();
-		String result = null;
+		int playerScore = player.getHand().getFinalScore();
+		int dealerScore = this.getHand().getFinalScore();
+		String resultMessage = null;
 		if(player.judgeBust()) {
-			result = "バーストしました。あなたの負けです。対戦ありがとうございました";
+			resultMessage = "バーストしました。あなたの負けです。対戦ありがとうございました";
 			player.setResult("lose");
 		}
 		if(judgeBust()) {
-			result =  "ディーラーがバーストしました。あなたの勝ちです。";
+			resultMessage =  "ディーラーがバーストしました。あなたの勝ちです。";
 			player.setResult("win");
 		}
 		if(!judgeBust() && !player.judgeBust()) {
 			if(playerScore > dealerScore) {
-				result =  playerScore + "対" + dealerScore + "であなたの勝ちです";
+				resultMessage =  playerScore + "対" + dealerScore + "であなたの勝ちです";
 				player.setResult("win");
 			}
 			if(playerScore < dealerScore) {
-				result =  playerScore + "対" + dealerScore + "であなたの負けです";
+				resultMessage =  playerScore + "対" + dealerScore + "であなたの負けです";
 				player.setResult("lose");
 			}
 			if(playerScore == dealerScore) {
-				result =  playerScore + "対" + dealerScore + "で引き分けです";
+				resultMessage =  playerScore + "対" + dealerScore + "で引き分けです";
 				player.setResult("draw");
 			}
 		}
-		return result;
+		return resultMessage;
 
 	}
 	

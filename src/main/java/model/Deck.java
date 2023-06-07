@@ -6,6 +6,11 @@ import java.util.Collections;
 public class Deck {
 	private ArrayList<Card> deck;
 	
+	public Deck() {
+		resetDeck();
+		shuffleDeck();
+	}
+	
 	private enum Suit{
 		クローバー,
 		ダイヤ,
@@ -13,23 +18,22 @@ public class Deck {
 		スペード;	
 	}
 	
-	public ArrayList<Card> resetDeck(){
+	private void resetDeck(){
 		ArrayList<Card> deck = new ArrayList<>();
-		for(int j= 0; j<6 ; j++) {
 		for(Suit suit : Suit.values()) { 
 			for(int i = 1; i < 14; i++) {
 				Card card = new Card(suit.toString(), i);
 				deck.add(card);
 			}
 		}
-		}
 		this.deck = deck;
-		return this.deck;
 	}
 	
-	public ArrayList<Card> shuffleDeck(ArrayList<Card> deck){
-		Collections.shuffle(deck);
-		return deck;
-		
+	private void shuffleDeck(){
+		Collections.shuffle(this.deck);	
+	}
+	
+	public ArrayList<Card> getDeck(){
+		return this.deck;
 	}
 }

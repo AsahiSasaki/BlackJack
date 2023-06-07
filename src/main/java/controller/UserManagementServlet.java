@@ -32,11 +32,8 @@ public class UserManagementServlet extends HttpServlet {
 			String message = e.getMessage();
 			request.setAttribute("message", message);
 		}
+		
 		RequestDispatcher rd = request.getRequestDispatcher("TopPage.jsp");
 		rd.forward(request, response);
-		
-		
 	}
-	
-
 }
