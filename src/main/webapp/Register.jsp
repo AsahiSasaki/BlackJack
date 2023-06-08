@@ -14,10 +14,10 @@
 	<% 
 	} %>
 <form action="RegisterServlet" method="post">
-<p>ID:<input type="text" name="loginID"/></p>
-<p>パスワード:<input type="text" name="loginPassword"/></p>
-<p>パスワード確認:<input type="text" name="confirmationLoginPassword"/></p>
-<p>ニックネーム:<input type="text" name="nickname"/></p>
+<p>ID:<input type="text" name="loginID" required="true"/></p>
+<p>パスワード:<input type="text" name="loginPassword" required="true"/></p>
+<p>パスワード確認:<input type="text" name="confirmationLoginPassword" required="true"/></p>
+<p>ニックネーム:<input type="text" name="nickname" required="true"/></p>
 <p><input type="submit" value="登録"/> </p>
 </form>
 

@@ -26,7 +26,7 @@ public class Test {
 			System.out.println("あなたの負けです");
 		}else {
 			System.out.println("ディーラーのターンです");
-			dealer.action(initDeck, dealer.getHand());
+			dealer.action(initDeck);
 			for(String s:dealer.getActionMessage()) {
 				System.out.println(s);
 			}

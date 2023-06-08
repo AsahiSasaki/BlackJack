@@ -13,9 +13,9 @@
 	<% 
 	} %>
 <form action="LoginServlet" method="post">
-<p>ID:<input type="text" name="loginID"/></p>
-<p>パスワード:<input type="text" name="loginPassword"/></p>
-<p><input type="submit" value="ログイン"/> </p>
+<p><input type="text" name="loginID" placeholder="UserID" required="true"/></p>
+<p><input type="text" name="loginPassword" placeholder="Password" required="true"/></p>
+<p><button type="submit">ログイン</button></p>
 </form>
 
 <a href="Register.jsp">新規登録</a>

@@ -16,6 +16,7 @@ import exception.DataBaseException;
 import model.Card;
 import model.Dealer;
 import model.Deck;
+import model.GameManagement;
 import model.Player;
 
 
@@ -32,14 +33,15 @@ public class BlackJackServlet extends HttpServlet {
 			RequestDispatcher rd = request.getRequestDispatcher("TopPage.jsp");
 			rd.forward(request, response);
 		}
-		
-		session.setAttribute("playGame", true);
+
+		GameManagement gm = new GameManagement();
 		
 		Deck deck = new Deck();
 			
 		Player player = new Player();
 		Dealer dealer = new Dealer();
 		
+		session.setAttribute("gameManagement", gm);
 		session.setAttribute("deck", deck.getDeck());
 		session.setAttribute("player", player);
 		session.setAttribute("dealer", dealer);
@@ -47,65 +49,52 @@ public class BlackJackServlet extends HttpServlet {
 		request.setAttribute("playerInit", player.initialHand(deck.getDeck()));
 		request.setAttribute("dealerInit", dealer.initialHand(deck.getDeck()));
 		
-		session.setAttribute("playerTurn", true);
 		
 		RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
 		rd.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		boolean close = false;
 		HttpSession session = request.getSession();
+		GameManagement gm = (GameManagement)session.getAttribute("gameManagement");
 		Player player = (Player)session.getAttribute("player");
 		Dealer dealer = (Dealer)session.getAttribute("dealer");
 		ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
 		
-		//Playerがhitを選択した場合
-		if(request.getParameter("hit") != null) {
-			Card c1 = player.drawCard(deck);
-			player.addStringHand(c1);
-			String s = c1.getDisplayName()+"を引きました";
-			request.setAttribute("drawMessage", s);
-			
-			//playerがバーストしていた場合
-			if(player.judgeBust()) {
-				session.setAttribute("playerTurn", false);
-				session.setAttribute("playGame", false);
-			}
+		//Playerが選択したactionによってスイッチ
+		switch(request.getParameter("action")) {
+			case "hit":
+				Card c1 = player.drawCard(deck);
+				player.addStringHand(c1);
+				request.setAttribute("drawMessage", c1.getDisplayName()+"を引きました");
+				
+				//Playerがバーストしていた場合
+				if(player.judgeBust()) {
+					gm.setPhase("PHASE3");
+					close = true;
+				}
+				break;
+			case "stand":
+				dealer.action(deck);
+				request.setAttribute("dealerAction", dealer.getActionMessage());
+				gm.setPhase("PHASE2");
+				close = true;
+				break;
 		}
 		
-		//Playerがstandを選択した場合
-		if(request.getParameter("stand") != null) {
-			session.setAttribute("playerTurn", false);
-			request.setAttribute("playerScore", player.getHand().getFinalScore());
-			dealer.action(deck, dealer.getHand());
-			request.setAttribute("dealerAction", dealer.getActionMessage());
-			session.setAttribute("playGame", false);
-		}
-		
-		//Playerがバーストする、もしくはDealerのターン終了で
-		//ゲーム終了となり、勝敗判定
-		//Playerのフィールドresultに勝ち負けを格納
-		//
-		if(!(boolean)session.getAttribute("playGame")) {
+		//ゲームが終了した時
+		if(close) {
 			request.setAttribute("result", dealer.compareScore(player));
-			
 			//結果をデータベースに書き込む
 			int loginUserId = Integer.parseInt((String)session.getAttribute("userId"));
 			try{
 				ResultRecordDao rrd = new ResultRecordDao(); 
-				if(player.getResult().equals("win") | player.getResult().equals("lose")) {
-					rrd.recordResult(loginUserId, player.getResult());
-				}
-				if(player.getResult().equals("draw")) {
-					rrd.recordResult(loginUserId);
-				}
-					
+				rrd.recordResult(loginUserId, player.getResult());
 			}catch (DataBaseException e) {
-				request.setAttribute("error", "true");
 				e.printStackTrace();
 			}
 		}
-		
 		
 		RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
 		rd.forward(request, response);

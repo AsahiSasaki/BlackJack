@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class Drawer {
-	private Hand hand = new Hand();
+	protected Hand hand = new Hand();
 	public boolean bust = false;
 	
 	public Hand getHand() {

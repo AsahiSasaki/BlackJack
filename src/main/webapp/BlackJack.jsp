@@ -5,6 +5,8 @@
 <%@page import="model.Card"%> 
 <%@page import="model.Player"%>
 <%@page import="model.Dealer"%>   
+<%@page import="model.GameManagement"%>  
+ <%@page import="model.GameManagement.Phase"%>  
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,71 +17,65 @@
 <h1>ブラック☆ジャック</h1>
 
 <%
+GameManagement gm = (GameManagement)session.getAttribute("gameManagement");
+Phase phase = gm.getPhase();
 ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
 Player player = (Player)session.getAttribute("player");
 Dealer dealer = (Dealer)session.getAttribute("dealer");
 %>
 
-
-<%if(request.getAttribute("playerInit") != null){ %>
-<p><%=request.getAttribute("playerInit") %><p>
-<%} %>
-<%if(request.getAttribute("dealerInit") != null){ %>
-<p><%=request.getAttribute("dealerInit") %><p>
-<%} %>
-
-
-
 <%
-if(request.getAttribute("drawMessage") != null){%>
-	<p><%=request.getAttribute("drawMessage")%><p>
-<%
-}%>
+switch(phase){
 
-<%
-if((boolean)session.getAttribute("playerTurn")){%>
-	現在の手札<br>
-	<%=player.getStringHand() %>
-	<% 
-	if(player.getHand().getExistA() && player.getHand().getMaxScore() < 21) {%>
-		<p>現在の得点は<%=player.getHand().getMinScore() %>/<%= player.getHand().getMaxScore()%>です。<p>
-	<%
-	}else {%>
-		<p>現在の得点は<%=player.getHand().getFinalScore() %>です。<p>
-	<%
-	}%>
-
-	<form action="BlackJackServlet" method="post">
-	<input type="submit" value="ヒット" name="hit">
-	<input type="submit" value="スタンド" name = "stand">
-	</form>	
-<%	
-}%>
-
-<%
-if(request.getAttribute("playerScore") != null){%>
-	<p>あなたの得点は<%=player.getHand().getFinalScore()%>です<p>
-<%}%>
-
-<%
-ArrayList<String> dealerAction = (ArrayList<String>)request.getAttribute("dealerAction");
-if(dealerAction != null){
-for(String s:dealerAction){%>
-<p><%=s %><p>
-<%}
-} %>
-
-<%if(request.getAttribute("result") != null){%>
-<p><%=request.getAttribute("result")%><p></p>
-<%}%>
-
-<% if(!(boolean)session.getAttribute("playGame")){%>
-	<a href="BlackJackServlet">next game</a><br>
-	<a href="Menue.jsp">メニューに戻る</a>
-<% }%>
-
-
+	case PHASE0: %>
+		<p><%=request.getAttribute("playerInit") %><p>
+		<p><%=request.getAttribute("dealerInit") %><p>
+		<%gm.setPhase("PHASE1"); 
+		//2枚の手札の表示は最初だけ行い、そのままPHASE1に移行
+	case PHASE1:%>
+		<p>あなたのターンです</p>
+		<%
+		if(request.getAttribute("drawMessage") != null){%>
+			<p><%=request.getAttribute("drawMessage")%><p>
+		<%
+		}%>
 		
+		<p>現在の手札<br>
+		<%=player.getStringHand() %></p>
+		<p><%=player.scoreMessage() %><p>
+
+		<form action="BlackJackServlet" method="post">
+		<p><button type="submit" value="hit" name="action">ヒット</button>
+		<button type="submit" value="stand" name="action">スタンド</button></p>
+		</form>	
+		
+		<%
+		break;
+	
+	case PHASE2:%>
+		<p>ディーラーのターンです<p>
+		<%
+		ArrayList<String> dealerAction = (ArrayList<String>)request.getAttribute("dealerAction");
+		for(String s:dealerAction){%>
+			<p><%=s %><p>
+		<%
+		gm.setPhase("PHASE3"); 
+		}%>		
+	<% 	
+	//PHASE2→PHASE3の場合は同一の画面で続けて表示
+	//PHASE1→PHASE3の場合はPHASE2を飛ばして最後に引いたカードと結果を表示
+	case PHASE3:%>
+		<%
+		if(request.getAttribute("drawMessage") != null){%>
+			<p><%=request.getAttribute("drawMessage")%><p>
+		<%
+		}%>
+		<p><%=request.getAttribute("result")%></p>
+		<a href="BlackJackServlet">next game</a><br>
+		<a href="Menue.jsp">メニューに戻る</a>
+		<%
+		break;
+}%>
 
 </body>
 </html>

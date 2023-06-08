@@ -9,13 +9,13 @@ public class Dealer extends Drawer{
 		super();
 	}
 	
-	public void  action(ArrayList<Card> deck, Hand hand) {
-		actionMessage.add(scoreMessage(hand));
+	public void  action(ArrayList<Card> deck) {
+		actionMessage.add(scoreMessage());
 		while(hand.getFinalScore() < 17) {
 			Card card = drawCard(deck);
 			actionMessage.add(cardMessage(card));
 			if(!judgeBust()) {
-				actionMessage.add(scoreMessage(hand));
+				actionMessage.add(scoreMessage());
 			}
 		}
 	}
@@ -36,11 +36,11 @@ public class Dealer extends Drawer{
 				", 2枚目に引いたカードは分かりません";
 	}
 	
-	public String cardMessage(Card card) {
+	private String cardMessage(Card card) {
 		return card.getDisplayName()+ "を引きました";
 	}
 	
-	public String scoreMessage(Hand hand) {
+	private String scoreMessage() {
 		if(hand.getExistA() && hand.getMaxScore() < 17) {
 			return "ディーラーの現在の点数は"+hand.getMinScore()+"/"+hand.getMaxScore()+"です";
 		}else {

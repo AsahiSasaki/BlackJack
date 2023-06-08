@@ -67,6 +67,14 @@ public class Player extends Drawer {
 		return stringHand;
 	}
 	
+	public String scoreMessage() {
+		if(hand.getExistA() && hand.getMaxScore() < 21) {
+			return "現在の点数は"+hand.getMinScore()+"/"+hand.getMaxScore()+"です";
+		}else{
+			return "現在の点数は"+hand.getFinalScore()+"です";
+		}
+	}
+	
 	//スタンドかヒットか入力して決めてもらう
 	public void selectAction() {
 		Scanner scan = new Scanner(System.in);
