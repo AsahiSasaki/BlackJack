@@ -26,13 +26,12 @@ Dealer dealer = (Dealer)session.getAttribute("dealer");
 
 <%
 switch(phase){
-
-	case PHASE0: %>
+	case INIT: %>
 		<p><%=request.getAttribute("playerInit") %><p>
 		<p><%=request.getAttribute("dealerInit") %><p>
-		<%gm.setPhase("PHASE1"); 
-		//2枚の手札の表示は最初だけ行い、そのままPHASE1に移行
-	case PHASE1:%>
+		<%gm.setPhase("PLAYERTURN"); 
+		//2枚の手札の表示は最初だけ行い、breakせずにそのままPHASE1に移行
+	case PLAYERTURN:%>
 		<p>あなたのターンです</p>
 		<%
 		if(request.getAttribute("drawMessage") != null){%>
@@ -52,19 +51,18 @@ switch(phase){
 		<%
 		break;
 	
-	case PHASE2:%>
+	case DEALERTURN:%>
 		<p>ディーラーのターンです<p>
 		<%
 		ArrayList<String> dealerAction = (ArrayList<String>)request.getAttribute("dealerAction");
 		for(String s:dealerAction){%>
 			<p><%=s %><p>
 		<%
-		gm.setPhase("PHASE3"); 
 		}%>		
 	<% 	
-	//PHASE2→PHASE3の場合は同一の画面で続けて表示
+	//PHASE2→PHASE3の場合はbreakせずに同一の画面で続けて表示
 	//PHASE1→PHASE3の場合はPHASE2を飛ばして最後に引いたカードと結果を表示
-	case PHASE3:%>
+	case RESULT:%>
 		<%
 		if(request.getAttribute("drawMessage") != null){%>
 			<p><%=request.getAttribute("drawMessage")%><p>

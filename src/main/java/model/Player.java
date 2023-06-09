@@ -75,6 +75,10 @@ public class Player extends Drawer {
 		}
 	}
 	
+	public String drawMessage(Card card) {
+		return card.getDisplayName()+"を引きました";
+	}
+	
 	//スタンドかヒットか入力して決めてもらう
 	public void selectAction() {
 		Scanner scan = new Scanner(System.in);

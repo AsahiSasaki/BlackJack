@@ -34,10 +34,8 @@ public class BlackJackServlet extends HttpServlet {
 			rd.forward(request, response);
 		}
 
-		GameManagement gm = new GameManagement();
-		
-		Deck deck = new Deck();
-			
+		GameManagement gm = new GameManagement();		
+		Deck deck = new Deck();	
 		Player player = new Player();
 		Dealer dealer = new Dealer();
 		
@@ -45,7 +43,6 @@ public class BlackJackServlet extends HttpServlet {
 		session.setAttribute("deck", deck.getDeck());
 		session.setAttribute("player", player);
 		session.setAttribute("dealer", dealer);
-		
 		request.setAttribute("playerInit", player.initialHand(deck.getDeck()));
 		request.setAttribute("dealerInit", dealer.initialHand(deck.getDeck()));
 		
@@ -55,7 +52,6 @@ public class BlackJackServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		boolean close = false;
 		HttpSession session = request.getSession();
 		GameManagement gm = (GameManagement)session.getAttribute("gameManagement");
 		Player player = (Player)session.getAttribute("player");
@@ -65,32 +61,33 @@ public class BlackJackServlet extends HttpServlet {
 		//Playerが選択したactionによってスイッチ
 		switch(request.getParameter("action")) {
 			case "hit":
-				Card c1 = player.drawCard(deck);
-				player.addStringHand(c1);
-				request.setAttribute("drawMessage", c1.getDisplayName()+"を引きました");
+				Card card = player.drawCard(deck);
+				player.addStringHand(card);
+				request.setAttribute("drawMessage", player.drawMessage(card));
 				
 				//Playerがバーストしていた場合
 				if(player.judgeBust()) {
-					gm.setPhase("PHASE3");
-					close = true;
+					gm.setPhase("RESULT");
+					gm.setClose();
 				}
 				break;
 			case "stand":
 				dealer.action(deck);
 				request.setAttribute("dealerAction", dealer.getActionMessage());
-				gm.setPhase("PHASE2");
-				close = true;
+				gm.setPhase("DEALERTURN");
+				gm.setClose();
 				break;
 		}
 		
 		//ゲームが終了した時
-		if(close) {
+		if(gm.getClose()) {
+			//ディーラーに勝敗判定をしてもらう
 			request.setAttribute("result", dealer.compareScore(player));
 			//結果をデータベースに書き込む
-			int loginUserId = Integer.parseInt((String)session.getAttribute("userId"));
+			int userId = Integer.parseInt((String)session.getAttribute("userId"));
 			try{
 				ResultRecordDao rrd = new ResultRecordDao(); 
-				rrd.recordResult(loginUserId, player.getResult());
+				rrd.recordResult(userId, player.getResult());
 			}catch (DataBaseException e) {
 				e.printStackTrace();
 			}

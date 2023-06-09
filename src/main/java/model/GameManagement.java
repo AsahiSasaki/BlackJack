@@ -2,9 +2,10 @@ package model;
 
 public class GameManagement {
 	private Phase phase;
+	private boolean close;
 	
 	public GameManagement() {
-		setPhase("PHASE0");
+		setPhase("INIT");
 	}
 	
 	public enum Phase{
@@ -13,10 +14,10 @@ public class GameManagement {
 //		ディーラーのターンをPHASE2
 //		プレイヤーがバースト、ディーラーがバースト、
 //		もしくは両者の手札が確定した場合結果の判定を行う段階をPHASE3
-		PHASE0,
-		PHASE1,
-		PHASE2,
-		PHASE3;
+		INIT,
+		PLAYERTURN,
+		DEALERTURN,
+		RESULT;
 	}
 	
 	public void setPhase(String string) {
@@ -25,6 +26,14 @@ public class GameManagement {
 	
 	public Phase getPhase() {
 		return this.phase;
+	}
+	
+	public void setClose() {
+		this.close = true;
+	}
+	
+	public boolean getClose() {
+		return close;
 	}
 
 }
