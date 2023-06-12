@@ -5,15 +5,15 @@ public class GameManagement {
 	private boolean close;
 	
 	public GameManagement() {
-		setPhase("INIT");
+		setPhase("PLAYERTURN");
 	}
 	
 	public enum Phase{
-//		デッキを新たに作り、最初の手札を2枚ずつ引く段階をPHASE0
-//		プレイヤーのターンをPHASE1
-//		ディーラーのターンをPHASE2
+//		デッキを新たに作り、最初の手札を2枚ずつ引く段階をINIT
+//		プレイヤーのターンをPLAYERTURN
+//		ディーラーのターンをDEALERTURN
 //		プレイヤーがバースト、ディーラーがバースト、
-//		もしくは両者の手札が確定した場合結果の判定を行う段階をPHASE3
+//		もしくは両者の手札が確定した場合結果の判定を行う段階をRESULT
 		INIT,
 		PLAYERTURN,
 		DEALERTURN,

@@ -29,7 +29,6 @@ public class Dealer extends Drawer{
 		Card c1 = drawCard(deck);
 		Card c2 = drawCard(deck);
 		
-		actionMessage.add("ディーラーが１枚目に引いたカードは"+ c1.getDisplayName());
 		actionMessage.add("２枚目に引いたカードは"+ c2.getDisplayName()+ "でした");
 		
 		return "ディーラーが1枚目に引いたカードは"+ c1.getDisplayName() +
@@ -78,5 +77,23 @@ public class Dealer extends Drawer{
 
 	}
 	
+	public String compareBJ(Player player) {
+		int playerScore = player.getHand().getFinalScore();
+		int dealerScore = this.getHand().getFinalScore();
+		String resultMessage = null;
+		if(playerScore > dealerScore) {
+			resultMessage =  "ブラックジャック！！あなたの勝ちです";
+			player.setResult("win");
+		}
+		if(playerScore < dealerScore) {
+			resultMessage =  "ディーラーのブラックジャックあなたの負けです";
+			player.setResult("lose");
+		}
+		if(playerScore == dealerScore) {
+			resultMessage =  "引き分けです";
+			player.setResult("draw");
+		}
+		return resultMessage;
+	}
 
 }

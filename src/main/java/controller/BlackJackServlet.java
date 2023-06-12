@@ -28,6 +28,7 @@ public class BlackJackServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		
+		//ログインユーザーがいない場合プレイできない
 		if(session.getAttribute("userId") == null) {
 			request.setAttribute("message", "ログインしてください");
 			RequestDispatcher rd = request.getRequestDispatcher("TopPage.jsp");
@@ -43,8 +44,28 @@ public class BlackJackServlet extends HttpServlet {
 		session.setAttribute("deck", deck.getDeck());
 		session.setAttribute("player", player);
 		session.setAttribute("dealer", dealer);
-		request.setAttribute("playerInit", player.initialHand(deck.getDeck()));
-		request.setAttribute("dealerInit", dealer.initialHand(deck.getDeck()));
+		player.initialHand(deck.getDeck());
+		dealer.initialHand(deck.getDeck());
+		
+		//もしこの時点で21点だった場合はナチュラルブラックジャックでRESULTへ移動
+		if(player.getHand().getFinalScore() == 21 || dealer.getHand().getFinalScore() == 21){
+			String result = dealer.compareBJ(player);
+			request.setAttribute("result", result);
+			gm.setPhase("RESULT");
+			
+			//データベースへの書き込み
+			int userId = Integer.parseInt((String)session.getAttribute("userId"));
+		
+			try{
+				ResultRecordDao rrd = new ResultRecordDao(); 
+				rrd.recordResult(userId, player.getResult());
+			}catch (DataBaseException e) {
+				e.printStackTrace();
+			}
+			
+			RequestDispatcher r = request.getRequestDispatcher("BlackJack.jsp");
+			r.forward(request, response);
+		}
 		
 		
 		RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
@@ -61,9 +82,7 @@ public class BlackJackServlet extends HttpServlet {
 		//Playerが選択したactionによってスイッチ
 		switch(request.getParameter("action")) {
 			case "hit":
-				Card card = player.drawCard(deck);
-				player.addStringHand(card);
-				request.setAttribute("drawMessage", player.drawMessage(card));
+				player.drawCard(deck);
 				
 				//Playerがバーストしていた場合
 				if(player.judgeBust()) {

@@ -12,7 +12,7 @@ public class Deck {
 	}
 	
 	private enum Suit{
-		クローバー,
+		クラブ,
 		ダイヤ,
 		ハート,
 		スペード;	
