@@ -98,7 +98,7 @@ public class UserDao extends BaseDao {
 			
 		}catch(SQLException e) {
 			e.printStackTrace();
-			throw new DataBaseException("ユーザー登録に失敗しました");
+			throw new DataBaseException("削除できませんでした");
 		}
 	}
 	

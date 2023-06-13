@@ -52,7 +52,6 @@ public class BlackJackServlet extends HttpServlet {
 			String result = dealer.compareBJ(player);
 			request.setAttribute("result", result);
 			gm.setPhase("RESULT");
-			
 			//データベースへの書き込み
 			int userId = Integer.parseInt((String)session.getAttribute("userId"));
 		
@@ -63,8 +62,6 @@ public class BlackJackServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 			
-			RequestDispatcher r = request.getRequestDispatcher("BlackJack.jsp");
-			r.forward(request, response);
 		}
 		
 		

@@ -7,16 +7,51 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+body{
+	background-color: #000000;
+	color: #FFFFFF;
+	font-family: "Yu Mincho";
+}
+
+a{	
+	color: #FFFFFF;
+	text-decoration: none;
+	font-family: "Impact";
+	font-size: 450% ;
+	
+}
+
+.return{
+	position: absolute;
+	top: 0%;
+	left: 0%;
+}
+
+.record{
+	margin-top: 5%;
+	text-align: center;
+	font-size: 200% ;
+}
+
+.content{
+	color: orange;
+	font-size: 200% ;
+}
+
+
+</style>
+
 <meta charset="UTF-8">
 <title>戦績表時</title>
 </head>
 <body>
-<p><a href="Menue.jsp">メニューに戻る</a></p>
-<h1>戦績</h1>
+<a href="Menu.jsp" class="return">Menu</a>
 
-<h2><p><%=session.getAttribute("loginuser") %>さんの成績</p></h2>
-<p><%=session.getAttribute("battleRecord") %></p>
-<h2><p>勝率トップ５ユーザー</p></h2>
+<div class="record">
+<p class="content"><%=session.getAttribute("loginuser") %>さんの成績</p>
+<%=session.getAttribute("battleRecord") %>
+<p class="content">勝率トップ５ユーザー</p>
 <%	BattleRecordDao brd = new BattleRecordDao();
 	UserDao ud = new UserDao();
 	ArrayList<Integer> topFive = brd.getTopFive();
@@ -25,5 +60,6 @@
 		<p><%=brd.getMessage(i+1, userId)%></p>
 	<% 
 	}%>
+</div>
 </body>
 </html>

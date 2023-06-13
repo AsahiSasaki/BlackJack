@@ -69,9 +69,9 @@ public class Player extends Drawer {
 	
 	public String scoreMessage() {
 		if(hand.getExistA() && hand.getMaxScore() < 21) {
-			return "現在の点数は"+hand.getMinScore()+"/"+hand.getMaxScore()+"です";
+			return hand.getMinScore()+"/"+hand.getMaxScore();
 		}else{
-			return "現在の点数は"+hand.getFinalScore()+"です";
+			return String.valueOf(hand.getFinalScore());
 		}
 	}
 	

@@ -39,11 +39,12 @@ public class Dealer extends Drawer{
 		return card.getDisplayName()+ "を引きました";
 	}
 	
-	private String scoreMessage() {
+	public String scoreMessage() {
 		if(hand.getExistA() && hand.getMaxScore() < 17) {
-			return "ディーラーの現在の点数は"+hand.getMinScore()+"/"+hand.getMaxScore()+"です";
+			return hand.getMinScore()+"/"+hand.getMaxScore();
 		}else {
-			return "ディーラーの現在の点数は"+hand.getFinalScore()+"です";
+			return String.valueOf(hand.getFinalScore());
+			
 		}
 	}
 	

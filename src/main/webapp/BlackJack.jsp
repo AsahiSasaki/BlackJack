@@ -16,6 +16,15 @@
 <title>ブラックジャック</title>
 
 <style>
+body{
+	background-color: #78FF94;
+	background-image: linear-gradient(0deg, transparent calc(100% - 2px), #FFF calc(100% - 2px)),
+                    linear-gradient(90deg, transparent calc(100% - 2px), #FFF calc(100% - 2px));
+  	background-size: 47px 47px;
+  	background-repeat: repeat;
+  	background-position: center center;
+}
+
 img{
     height: 220px;
     width: auto;
@@ -26,10 +35,123 @@ img{
     width: auto;
     display: flex;
     justify-content: center;
+    margin-top: -90px;
 }
 
 .dealer{
+	margin-top: -10px;
 	text-align: center;
+}
+
+.playerhand{
+	height: 220px;
+    width: auto;
+    display: flex;
+    justify-content: center;
+    margin-top: 110px;
+}
+
+.action{
+	margin-top: 130px;
+	text-align: center;
+}
+
+button{
+    width: 14%;
+    height: 90px;
+    margin: 10px;
+    font-size: 300% ;
+   	border: 0;
+   	background-color: #005FFF;
+   	color: #FFFF22;
+}
+
+.hit{
+	color: #FFF;	
+	background-color: #000000;
+}
+
+.stand{
+	color: #fff;
+	background-color: #FF8C00;
+}
+
+.balloon-right {
+  position: relative;
+  display: inline-block;
+  margin: 1.5em 15px 1.5em 0;
+  padding: 0 5px;
+  width: 110px;
+  height: 110px;
+  line-height: 55px;
+  text-align: center;
+  color: #FFF;
+  background: #ff8e9d;
+  font-size: 30px;
+  font-weight: bold;
+  border-radius: 50%;
+  box-sizing: border-box;
+
+}
+
+ 
+.balloon-right:before {
+  content: "";
+  position: absolute;
+  bottom: 88px;
+  right: -8px;
+  margin-top: -15px;
+  border: 15px solid transparent;
+  border-left: 15px solid #ff8e9d;
+  z-index: 0;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+
+
+
+.point{
+	position: absolute;
+    top: 66%;
+    left:36.5%;
+    
+}
+
+.dealerpoint{
+	position: absolute;
+    top:32%;
+    left:36.5%;
+}
+
+.menue{
+	position: absolute;
+	bottom: 2.4%;
+	right: 5%;
+	width: 20%;
+    height: 70px;
+    margin: 10px;
+    font-size: 220% ;
+   	border: 0;
+   	background-color: #990000;
+   	color: #FFFF22;
+}
+
+.result{
+	font-weight: bold;
+	margin-top: 130px;
+	text-align: center;	
+	font-size: 170% ;
+}
+
+.next{
+    width: 20%;
+    height: 70px;
+    margin: 10px;
+    font-size: 220% ;
+   	border: 0;
+   	background-color: #005FFF;
+   	color: #FFFF22;
 }
 
 </style>
@@ -38,7 +160,6 @@ img{
 
 </head>
 <body>
-<h1>ブラック☆ジャック</h1>
 
 <%
 GameManagement gm = (GameManagement)session.getAttribute("gameManagement");
@@ -58,61 +179,86 @@ ArrayList<Card> dealerHand = dealer.getHand().getHand();
 switch(phase){
 	case PLAYERTURN :%>	
 		
-		<div class="dealerhand">
-		<% 
+		<div class="dealerhand"><% 
 		Card card1 =dealerHand.get(0);%>
 		<img src="trump/<%=card1.getIllustPath()%>">
 		<img src="trump/card_back.png">
-		</div><%
-		break;
+		</div>
+		
+		<div class="dealerpoint">
+		<div class="balloon-right">
+    	<p>？<p>
+		</div></div>
+		
+		<!-- プレイヤーの手札 -->
+
+
+		<div class="playerhand"><%
+		for(Card card :playerHand){%>
+		<img src="trump/<%=card.getIllustPath()%>">
+		<%
+		}%></div>
+		<div class="point">
+		<div class="balloon-right">
+    	<p><%=player.scoreMessage() %><p></div></div>
+		
+		
+		<%break;
 		
 	default :%>
-		<div class="dealerhand">ディーラー<br><%
+		<div class="dealerhand"><%
 		for(Card card :dealerHand){%>
 			<img src="trump/<%=card.getIllustPath()%>">
 		<%
 		} %></div>
+		<div class="dealerpoint">
+		<div class="balloon-right">
+    	<p><%=dealer.getHand().getFinalScore() %><p>
+		</div></div>
+		
+		
+		<div class="playerhand"><%
+		for(Card card :playerHand){%>
+			<img src="trump/<%=card.getIllustPath()%>">
+			<%
+		}%></div>
+		<div class="point">
+		<div class="balloon-right">
+    	<p><%=player.getHand().getFinalScore() %><p></div></div>
+		
 <%
 }%>
-
-<!-- プレイヤーの手札 -->
-<p>あなた<br>
-<%
-for(Card card :playerHand){%>
-	<img src="trump/<%=card.getIllustPath()%>">
-<%
-}%></p>
 
 
 <%
 switch(phase){
 	case PLAYERTURN:%>
-		<p>あなたのターンです</p>
-		<p><%=player.scoreMessage() %><p>
-
+		
 		<form action="BlackJackServlet" method="post">
-		<p><button type="submit" value="hit" name="action">ヒット</button>
-		<button type="submit" value="stand" name="action">スタンド</button></p>
+		<div class="action">
+		<button type="submit" value="hit" name="action" class="hit">HIT</button>
+		<button type="submit" value="stand" name="action" class="stand">STAND</button></div>
 		</form>	
 		<%
 		break;
 	
 	case DEALERTURN:%>
-		<p>ディーラーのターンです<p>
 		
-		<%
-		ArrayList<String> dealerAction = (ArrayList<String>)request.getAttribute("dealerAction");
-		for(String s:dealerAction){%>
-			<%=s %><br>
-		<%
-		}%>		
+			
 	<% 	
 	//DEALERTURN→RESULTの場合はbreakせずに同一の画面で続けて表示
 	//PLAYERTURN→RESULTの場合はDEALERTURNを飛ばして最後に引いたカードと結果を表示
 	case RESULT:%>
-		<p><%=request.getAttribute("result")%></p>
-		<a href="BlackJackServlet">next game</a><br>
-		<a href="Menue.jsp">メニューに戻る</a>
+		<div class="result"><%=request.getAttribute("result")%>
+		<form action="BlackJackServlet">
+		<button type="submit" class="next">NEXT GAME</button>
+		</form>
+		</div>
+		<form action="Menu.jsp">
+		<button type="submit" class="menue">メニューに戻る</button>
+		</form>
+		</div>
+		
 		<%
 		break;
 }%>

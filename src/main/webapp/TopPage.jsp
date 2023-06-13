@@ -3,10 +3,48 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+h1{
+	margin-top: 20%;
+	text-align: center;
+	font-size: 500% ;
+
+}
+
+
+.login{
+	margin-top: -3%;
+	text-align: center;
+}
+
+button{
+    width: 8%;
+}
+
+input{
+	width: 8%;
+}
+
+.signup{
+	margin-top: 5%;
+	text-align: center;
+}
+
+a{	
+	text-decoration: none;
+	color: #000000;
+}
+
+
+
+</style>
 <meta charset="UTF-8">
 <title>トップページ</title>
 </head>
 <body>
+<h1>BLACK JACK</h1>
+
+<div class="login">
 <% String message = (String)request.getAttribute("message");  
 	if(message != null){ %>
 	<span style="color:red"><%= message %></span>
@@ -17,8 +55,10 @@
 <p><input type="text" name="loginPassword" placeholder="Password" required="true"/></p>
 <p><button type="submit">ログイン</button></p>
 </form>
+</div>
 
-<a href="Register.jsp">新規登録</a>
+<div class="signup"><a href="Register.jsp">新規登録</a></div>
+
 
 </body>
 </html>

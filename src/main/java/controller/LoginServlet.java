@@ -45,9 +45,9 @@ public class LoginServlet extends HttpServlet {
 			HttpSession session = request.getSession();
 			session.setAttribute("loginuser", loginUser.getUserNickname());
 			session.setAttribute("userId", loginUser.getUserId());
-			
+			session.setAttribute("loginPassword", loginUser.getLoginPassword());
 		
-			nextpage = "Menue.jsp";
+			nextpage = "Menu.jsp";
 			
 		}catch(DataBaseException e) {
 			//ログインできなかったらログイン画面に戻す

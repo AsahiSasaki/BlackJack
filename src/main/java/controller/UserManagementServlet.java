@@ -21,6 +21,13 @@ public class UserManagementServlet extends HttpServlet {
 		HttpSession session = request.getSession(true);
 		
 		int loginID = Integer.parseInt((String)(session.getAttribute("userId")));
+		String loginPassword =(String)session.getAttribute("loginPassword");
+		String confirmationPassword = request.getParameter("loginPassword");
+		if(!loginPassword.equals(confirmationPassword)) {
+			request.setAttribute("message", "パスワードが違います");
+			RequestDispatcher rd = request.getRequestDispatcher("UserManagement.jsp");
+			rd.forward(request, response);
+		}
 		
 		try{
 			UserDao userDao = new UserDao();
