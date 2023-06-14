@@ -4,6 +4,7 @@ public class User {
 	private String userId;
 	private String loginPassword;
 	private String userNickname;
+	private int chip;
 	
 	public User(String userId, String loginPassword, String userNickname) {
 		this.userId = userId;
@@ -34,6 +35,14 @@ public class User {
 	
 	public void setUserNickname(String userNickname) {
 		this.userNickname = userNickname;
+	}
+	
+	public int getChip() {
+		return chip;
+	}
+	
+	public void setChip(int chip) {
+		this.chip = chip;
 	}
 
 }

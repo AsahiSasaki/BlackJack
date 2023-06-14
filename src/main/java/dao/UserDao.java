@@ -33,7 +33,9 @@ public class UserDao extends BaseDao {
 				String PlayerId = rs.getString("user_id");
 				String userNickname = rs.getString("user_nickname");
 				String userPassword = rs.getString("login_password");
+				int chip = rs.getInt("chip");
 				loginUser = new User(PlayerId, userPassword, userNickname);
+				loginUser.setChip(chip);
 			}	
 			//loginUserがnull(つまりデータベースに登録されてない人)だったらCampusExceptionを返す
 			if(loginUser == null) {
@@ -172,8 +174,10 @@ public class UserDao extends BaseDao {
 	}
 		
 	//ユーザーの勝率を取得するメソッド
+	
 	public double getWinRate(int userId) throws DataBaseException{
 		double winRate = 100*(double)getWinCount(userId)/getMatchCount(userId);
+		winRate = ((double)Math.round(winRate * 10))/10;
 		return winRate;
 	}
 	
@@ -197,5 +201,26 @@ public class UserDao extends BaseDao {
 		}
 		return nickname;
 	}
+	
+	//ユーザーのチップ数を取得するメソッド
+		public int getChip(int userId) throws DataBaseException{
+			int chip = 0;
+				
+			try {
+				String sql = "select chip from user where user_id = ? ";
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, userId);
+				rs = ps.executeQuery();
+					
+				while(rs.next()) {
+					chip = rs.getInt("chip");
+				}	
+					
+			}catch(SQLException e) {
+				e.printStackTrace();
+				throw new DataBaseException("チップを取得できませんでした");
+			}
+			return chip;
+		}
 
 }

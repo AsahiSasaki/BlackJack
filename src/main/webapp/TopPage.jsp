@@ -35,6 +35,11 @@ a{
 	color: #000000;
 }
 
+footer{
+	position: fixed;
+	bottom: 0;
+	right: 1%;
+}
 
 
 </style>
@@ -57,8 +62,11 @@ a{
 </form>
 </div>
 
-<div class="signup"><a href="Register.jsp">新規登録</a></div>
+<div class="signup"><a href="Register.jsp">新規登録はこちら</a></div>
 
+<footer>
+    <p><small>&copy; 2023 Asahi Sasaki.</small></p>
+ </footer>
 
 </body>
 </html>

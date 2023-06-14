@@ -37,7 +37,6 @@ public class LoginServlet extends HttpServlet {
 		String loginPassword = request.getParameter("loginPassword");
 		//ログインIDとログインパスワードを取得
 		
-		
 		try{
 			UserDao userDao = new UserDao();
 			User loginUser = userDao.doLogin(loginID, loginPassword);
@@ -46,7 +45,8 @@ public class LoginServlet extends HttpServlet {
 			session.setAttribute("loginuser", loginUser.getUserNickname());
 			session.setAttribute("userId", loginUser.getUserId());
 			session.setAttribute("loginPassword", loginUser.getLoginPassword());
-		
+			session.setAttribute("userChip", loginUser.getChip());
+			
 			nextpage = "Menu.jsp";
 			
 		}catch(DataBaseException e) {

@@ -11,12 +11,12 @@ public class BattleRecordDao extends BaseDao{
 		super();
 	}
 	
-	//勝率トップ５のユーザーを取得するメソッド
+	//勝率トップ５のユーザーIDを取得するメソッド
 	public ArrayList<Integer> getTopFive() throws DataBaseException{
 		ArrayList<Integer> topFiveId = new ArrayList<>();
 		
 		try {
-			String sql = "select user_id from user where match_count != 0 order by win_count/match_count desc ";
+			String sql = "select user_id from user where match_count != 0 order by chip desc ";
 			ps = con.prepareStatement(sql);
 			rs = ps.executeQuery();
 			while(rs.next()) {
@@ -38,8 +38,9 @@ public class BattleRecordDao extends BaseDao{
 		StringBuilder sb = new StringBuilder();
 		
 		UserDao ud = new UserDao();
-		sb.append(rank).append("位：").append(ud.getNickname(userId))
-		.append(" 勝率：").append(ud.getWinRate(userId)).append("%");
+//		sb.append(rank).append("位：").append(ud.getNickname(userId))
+//		.append(" 勝率：").append(ud.getWinRate(userId)).append("%");
+		sb.append(rank).append("位：").append(ud.getNickname(userId)).append("　").append(ud.getChip(userId)).append("枚");
 		return sb.toString();
 	}
 

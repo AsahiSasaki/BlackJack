@@ -77,7 +77,7 @@ button{
 }
 
 .balloon-right {
-  position: relative;
+  position: absolute;
   display: inline-block;
   margin: 1.5em 15px 1.5em 0;
   padding: 0 5px;
@@ -125,7 +125,7 @@ button{
 }
 
 .menue{
-	position: absolute;
+	position: fixed;
 	bottom: 2.4%;
 	right: 5%;
 	width: 20%;

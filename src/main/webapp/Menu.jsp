@@ -33,6 +33,32 @@ a{
 	
 }
 
+button.link-style-btn, .logout{
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: #FFFFFF;
+  font-family: "Impact";
+  font-size: 450% ;
+}
+
+button:hover {
+	color: #000000;
+    background-color: #FFFFFF;
+ }
+
+
+label{
+  color: #FFFFFF;
+}
+
+
+button.link-style-btn.logout{
+	position: absolute;
+	top: 5%;
+	right: 5%;
+}
+
 
 </style>
 
@@ -44,15 +70,26 @@ a{
 
 <div class="menue">
 <div class="text">
-<p><a href="BlackJackServlet">Play Game</a></p>
 
-<p><a href="BattleRecordServlet" >Battle Record</a></p>
+<form action="BlackJackServlet">
+<p><button type="submit" class="link-style-btn">Play Game</button></p>
+</form>
 
-<p><a href="UserManagement.jsp">User Management</a></p>
+<form action="BattleRecordServlet">
+<p><button type="submit" class="link-style-btn">Battle Record</button></p>
+</form>
+
+<form action="UserManagement.jsp">
+<p><button type="submit" class="link-style-btn">User Management</button></p>
+</form>
+
 </div>
 </div>
 
-<a href="LoginServlet" class="logout">Logout</a>
+<form action="LoginServlet">
+<p><button type="submit" class="logout">Logout</button></p>
+</form>
+
 
 
 </body>

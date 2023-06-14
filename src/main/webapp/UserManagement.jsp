@@ -23,6 +23,22 @@ a{
 	text-align: center;
 	font-size: 150% ;
 }
+
+button.menu{
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: #FFFFFF;
+  font-family: "Impact";
+  font-size: 450% ;
+}
+
+button:hover {
+	color: #000000;
+    background-color: #FFFFFF;
+ }
+
+
 </style>
 
 
@@ -30,7 +46,11 @@ a{
 <title>ユーザー管理</title>
 </head>
 <body>
-<a href="Menu.jsp">Menu</a>
+
+<form action="Menu.jsp">
+<p><button type="submit" class="menu">Menu</button></p>
+</form>
+
 <div class="delete">
 <p>現在ログインしているユーザーを削除します。<br>
 パスワードを入力して削除ボタンを押してください</p>

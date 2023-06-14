@@ -34,10 +34,29 @@ a{
 	font-size: 200% ;
 }
 
-.content{
+.subject{
 	color: orange;
 	font-size: 200% ;
 }
+
+.record .text{
+	text-align: left;
+	display: inline-block;
+}
+
+button.menu{
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: #FFFFFF;
+  font-family: "Impact";
+  font-size: 450% ;
+}
+
+button:hover {
+	color: #000000;
+    background-color: #FFFFFF;
+ }
 
 
 </style>
@@ -46,20 +65,33 @@ a{
 <title>戦績表時</title>
 </head>
 <body>
-<a href="Menu.jsp" class="return">Menu</a>
+
+<form action="Menu.jsp">
+<p><button type="submit" class="menu">Menu</button></p>
+</form>
+
 
 <div class="record">
-<p class="content"><%=session.getAttribute("loginuser") %>さんの成績</p>
-<%=session.getAttribute("battleRecord") %>
-<p class="content">勝率トップ５ユーザー</p>
+<div class="subject"><%=session.getAttribute("loginuser") %>さんの成績</div>
+<p><%=session.getAttribute("battleRecord")%><br>
+チップの保有枚数：<%=session.getAttribute("userChip")%>枚</p>
+<div class="subject">チップ保有枚数トップ5</div>
+
 <%	BattleRecordDao brd = new BattleRecordDao();
 	UserDao ud = new UserDao();
-	ArrayList<Integer> topFive = brd.getTopFive();
+	ArrayList<Integer> topFive = brd.getTopFive();%>
+	<table width=30% align="center"><% 
 	for(int i=0; i < topFive.size();i++) {
 		int userId = topFive.get(i);%>
-		<p><%=brd.getMessage(i+1, userId)%></p>
+		<tr>
+			<td><%=i+1%>位</td>
+			<td><%=ud.getNickname(userId) %></td>
+			<td><%=ud.getChip(userId) %>枚</td>
+		</tr>
 	<% 
 	}%>
+	</table>
+
 </div>
 </body>
 </html>

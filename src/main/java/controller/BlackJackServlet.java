@@ -28,6 +28,10 @@ public class BlackJackServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		
+		
+		session.setAttribute("bet",10);
+		
+		
 		//ログインユーザーがいない場合プレイできない
 		if(session.getAttribute("userId") == null) {
 			request.setAttribute("message", "ログインしてください");
@@ -70,11 +74,18 @@ public class BlackJackServlet extends HttpServlet {
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		HttpSession session = request.getSession();
 		GameManagement gm = (GameManagement)session.getAttribute("gameManagement");
 		Player player = (Player)session.getAttribute("player");
 		Dealer dealer = (Dealer)session.getAttribute("dealer");
 		ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
+
+		System.out.println(session.getAttribute("bet"));
+		session.removeAttribute("bet");
+		System.out.println(session.getAttribute("bet"));
+		
+		
 		
 		//Playerが選択したactionによってスイッチ
 		switch(request.getParameter("action")) {
