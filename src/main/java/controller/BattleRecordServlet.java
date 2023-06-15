@@ -41,7 +41,7 @@ public class BattleRecordServlet extends HttpServlet {
 			ArrayList<Integer> topFiveId = brd.getTopFive();
 			session.setAttribute("battleRecord", battleRecord);
 			session.setAttribute("topFiveId", topFiveId);
-		
+			
 				
 		}catch (DataBaseException e) {
 			String message = e.getMessage();

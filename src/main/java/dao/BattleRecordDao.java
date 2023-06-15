@@ -43,5 +43,8 @@ public class BattleRecordDao extends BaseDao{
 		sb.append(rank).append("位：").append(ud.getNickname(userId)).append("　").append(ud.getChip(userId)).append("枚");
 		return sb.toString();
 	}
+	
+	
+	
 
 }

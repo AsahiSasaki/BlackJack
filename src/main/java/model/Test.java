@@ -1,10 +1,16 @@
 package model;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import dao.UserDao;
+import exception.DataBaseException;
 
 public class Test {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws DataBaseException, SQLException {
+		UserDao ud = new UserDao();
+		ud.close();
 		Deck deck = new Deck();
 		ArrayList<Card> initDeck = deck.getDeck();
 		for(Card c : initDeck) {

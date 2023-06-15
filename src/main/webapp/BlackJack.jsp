@@ -7,7 +7,8 @@
 <%@page import="model.Dealer"%>   
 <%@page import="model.GameManagement"%>  
 <%@page import="model.GameManagement.Phase"%>
-
+<%@ page import="dao.BattleRecordDao" %>
+<%@ page import="dao.UserDao" %>
    
 <!DOCTYPE html>
 <html>
@@ -23,6 +24,7 @@ body{
   	background-size: 47px 47px;
   	background-repeat: repeat;
   	background-position: center center;
+
 }
 
 img{
@@ -64,6 +66,7 @@ button{
    	border: 0;
    	background-color: #005FFF;
    	color: #FFFF22;
+   	 cursor: pointer;
 }
 
 .hit{
@@ -137,6 +140,21 @@ button{
    	color: #FFFF22;
 }
 
+.changeBet{
+	position: fixed;
+	bottom: 13%;
+	right: 5%;
+	width: 20%;
+    height: 70px;
+    margin: 10px;
+    font-size: 220% ;
+   	border: 0;
+   	background-color: #FF0000;
+   	color: #000000;
+}
+
+
+
 .result{
 	font-weight: bold;
 	margin-top: 130px;
@@ -144,7 +162,7 @@ button{
 	font-size: 170% ;
 }
 
-.next{
+.next, .deal{
     width: 20%;
     height: 70px;
     margin: 10px;
@@ -153,6 +171,75 @@ button{
    	background-color: #005FFF;
    	color: #FFFF22;
 }
+
+.deal{
+	position: absolute;
+	bottom: 2.4%;
+	left: 40%;
+}
+
+
+.chip{
+	margin-top: 45px;
+	margin-bottom: 0;
+    display: flex;
+    justify-content: center;
+}
+.chip label{
+    display: block;
+    height: 150px;
+    width: 150px;
+    background: #FFFFFF;
+    color: #000000;
+    padding: 10px;
+    margin: 10px;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 25px solid #FF0000;
+    padding: 21px;
+    font-size: 45px;
+    font-family: "Impact";
+}
+
+.chip input:checked+label{
+    background: #FFFFFF;
+    color: #000000;
+    border: 25px solid #0000FF;
+}
+.chip input{
+    display: none;
+}
+
+.chip input:hover+label{
+	color: #000000;
+    background: #FFFFFF;
+    border: 25px solid #FF3333;
+ }
+
+.center{
+	text-align: center;
+}
+
+.betText{
+	font-weight: bold;
+	text-align: center;	
+	font-size: 170% ;
+}
+
+table{
+	font-size: 300%;
+	font-family: "Impact";
+}
+
+.numchip{
+	position: fixed;
+	bottom: 0px;
+	left: 0px;
+}
+
 
 </style>
 
@@ -164,21 +251,61 @@ button{
 <%
 GameManagement gm = (GameManagement)session.getAttribute("gameManagement");
 Phase phase = gm.getPhase();
-ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
 Player player = (Player)session.getAttribute("player");
 ArrayList<Card> playerHand = player.getHand().getHand();
 Dealer dealer = (Dealer)session.getAttribute("dealer");
 ArrayList<Card> dealerHand = dealer.getHand().getHand();
+UserDao ud = new UserDao();
+int userId= Integer.parseInt((String)session.getAttribute("userId"));
 %>
 
 <div class="dealer"><img src="trump/casino_dealer_woman.png"></div>
 
+<div class="numchip">
+   	<table>
+		<tr>
+			<td><img src="trump/casino_chip.png"></td>
+			<td><%=ud.getChip(userId) %></td>
+		</tr>
+	</table>
+ </div>
+ <%ud.close(); %>
 
-<!-- ディーラーの手札 -->
 <%
 switch(phase){
-	case PLAYERTURN :%>	
+    case INIT:%>
+    	
+    	<form action="BlackJackServlet">
+    	<div class="center">
+    	<div class="betText">何枚賭けますか？</div>
+      	<div class="chip">
+    	<input type="radio" name="betChip" value="1" id="one"> <label for="one" >1</label>
+    	<input type="radio" name="betChip" value="2" id="two"> <label for="two" >2</label>
+    	<input type="radio" name="betChip" value="3" id="three"> <label for="three" >3</label>
+       	<input type="radio" name="betChip" value="4" id="four"> <label for="four" >4</label>
+    	<input type="radio" name="betChip" value="5" id="five"> <label for="five" >5</label>
+    	</div>
+    	<div class="chip">
+    	<input type="radio" name="betChip" value="6" id="six"> <label for="six" >6</label>
+    	<input type="radio" name="betChip" value="7" id="seven"> <label for="seven" >7</label>
+    	<input type="radio" name="betChip" value="8" id="eight"> <label for="eight" >8</label>
+    	<input type="radio" name="betChip" value="9" id="nine"> <label for="nine" >9</label>
+    	<input type="radio" name="betChip" value="10" id="ten" checked> <label for="ten" >10</label> 
+		</div>
+		<p><button type="submit" class="deal">Deal</button><p>
+		</div></form>
 		
+		<form action="Menu.jsp">
+		<button type="submit" class="menue">メニューに戻る</button>
+		</form>
+		
+		
+
+		<%
+		break;
+	case PLAYERTURN :%>	
+	
+		<!-- ディーラーの手札 -->
 		<div class="dealerhand"><% 
 		Card card1 =dealerHand.get(0);%>
 		<img src="trump/<%=card1.getIllustPath()%>">
@@ -190,9 +317,8 @@ switch(phase){
     	<p>？<p>
 		</div></div>
 		
+		
 		<!-- プレイヤーの手札 -->
-
-
 		<div class="playerhand"><%
 		for(Card card :playerHand){%>
 		<img src="trump/<%=card.getIllustPath()%>">
@@ -202,6 +328,11 @@ switch(phase){
 		<div class="balloon-right">
     	<p><%=player.scoreMessage() %><p></div></div>
 		
+		<form action="BlackJackServlet" method="post">
+		<div class="action">
+		<button type="submit" value="hit" name="action" class="hit">HIT</button>
+		<button type="submit" value="stand" name="action" class="stand">STAND</button></div>
+		</form>	
 		
 		<%break;
 		
@@ -225,43 +356,25 @@ switch(phase){
 		<div class="point">
 		<div class="balloon-right">
     	<p><%=player.getHand().getFinalScore() %><p></div></div>
-		
-<%
-}%>
-
-
-<%
-switch(phase){
-	case PLAYERTURN:%>
-		
-		<form action="BlackJackServlet" method="post">
-		<div class="action">
-		<button type="submit" value="hit" name="action" class="hit">HIT</button>
-		<button type="submit" value="stand" name="action" class="stand">STAND</button></div>
-		</form>	
-		<%
-		break;
-	
-	case DEALERTURN:%>
-		
-			
-	<% 	
-	//DEALERTURN→RESULTの場合はbreakせずに同一の画面で続けて表示
-	//PLAYERTURN→RESULTの場合はDEALERTURNを飛ばして最後に引いたカードと結果を表示
-	case RESULT:%>
-		<div class="result"><%=request.getAttribute("result")%>
+    	
+    	<div class="result"><%=request.getAttribute("result")%>
 		<form action="BlackJackServlet">
-		<button type="submit" class="next">NEXT GAME</button>
+		<button type="submit" class="next">NEXT GAME</button></div>
+		<button type="submit" class="changeBet" name="changeBet">BET額を変更</button>
 		</form>
-		</div>
+		
+		<%session.removeAttribute("gameManagement");
+		%>
 		<form action="Menu.jsp">
 		<button type="submit" class="menue">メニューに戻る</button>
 		</form>
-		</div>
+    	
 		
-		<%
-		break;
+<%
 }%>
+
+
+
 
 </body>
 </html>

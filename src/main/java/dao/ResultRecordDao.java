@@ -23,11 +23,11 @@ public class ResultRecordDao extends BaseDao {
 			ps = con.prepareStatement(sb.toString());
 			ps.setInt(1, userId);
 			ps.executeUpdate();
-			close();
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new DataBaseException("試合結果の記録に失敗しました");
 		}
+		
 	}
 	
 	

@@ -5,7 +5,7 @@ public class GameManagement {
 	private boolean close;
 	
 	public GameManagement() {
-		setPhase("PLAYERTURN");
+		setPhase("INIT");
 	}
 	
 	public enum Phase{

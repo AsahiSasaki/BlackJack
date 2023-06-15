@@ -44,7 +44,7 @@ public abstract class BaseDao {
 	}
 	
 	//接続を切る
-	protected void close() throws SQLException{
+	public void close() throws SQLException{
 		if (con != null) {
 			con.close();
 		}

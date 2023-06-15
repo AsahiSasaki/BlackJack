@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -18,7 +19,7 @@ import model.User;
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
 		HttpSession session = request.getSession(false);
 		session.invalidate();
 		
@@ -47,6 +48,7 @@ public class LoginServlet extends HttpServlet {
 			session.setAttribute("loginPassword", loginUser.getLoginPassword());
 			session.setAttribute("userChip", loginUser.getChip());
 			
+			userDao.close();
 			nextpage = "Menu.jsp";
 			
 		}catch(DataBaseException e) {
@@ -59,6 +61,8 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("message", "IDには数字を入力してください");
 			request.setAttribute("error", "true");
 			nextpage = "TopPage.jsp";
+		}catch(SQLException e) {
+			
 		}
 		
 		//次の画面へ遷移

@@ -80,7 +80,6 @@ public class UserDao extends BaseDao {
 			ps.setString(3, userNickname);
 			ps.executeUpdate();
 			
-			
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new DataBaseException("ユーザー登録に失敗しました");
@@ -97,7 +96,6 @@ public class UserDao extends BaseDao {
 			ps = con.prepareStatement(sql);
 			ps.setInt(1, userId);
 			ps.executeUpdate();
-			
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new DataBaseException("削除できませんでした");
@@ -117,7 +115,7 @@ public class UserDao extends BaseDao {
 			while(rs.next()) {
 				matchCount = rs.getInt("match_count");
 			}	
-			
+		
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new DataBaseException("対戦回数を取得できませんでした");
@@ -138,7 +136,6 @@ public class UserDao extends BaseDao {
 			while(rs.next()) {
 				winCount = rs.getInt("win_count");
 			}	
-				
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new DataBaseException("勝利数を取得できませんでした");
@@ -158,8 +155,7 @@ public class UserDao extends BaseDao {
 			
 			while(rs.next()) {
 				loseCount = rs.getInt("lose_count");
-				}	
-						
+				}				
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new DataBaseException("敗北数を取得できませんでした");
@@ -194,7 +190,7 @@ public class UserDao extends BaseDao {
 			while(rs.next()) {
 				nickname = rs.getString("user_nickname");
 			}	
-					
+				
 		}catch(SQLException e) {
 			e.printStackTrace();
 			throw new DataBaseException("ニックネームを取得できませんでした");
@@ -215,12 +211,28 @@ public class UserDao extends BaseDao {
 				while(rs.next()) {
 					chip = rs.getInt("chip");
 				}	
-					
 			}catch(SQLException e) {
 				e.printStackTrace();
 				throw new DataBaseException("チップを取得できませんでした");
 			}
 			return chip;
 		}
+		
+	//ユーザーIDとチップの数を引数とし、現在のチップ数を更新
+		public int updateChip(int userId, int chip) throws DataBaseException{
+				
+			try {
+				String sql = "update user set chip = chip + ? where user_id = ? ";
+				ps = con.prepareStatement(sql);
+				ps.setInt(1, chip);
+				ps.setInt(2, userId);
+				ps.executeUpdate();
+				
+			}catch(SQLException e) {
+				e.printStackTrace();
+				throw new DataBaseException("チップを記入できませんでした");
+			}
+			return chip;
+		}	
 
 }

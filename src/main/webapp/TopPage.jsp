@@ -11,7 +11,6 @@ h1{
 
 }
 
-
 .login{
 	margin-top: -3%;
 	text-align: center;
@@ -40,6 +39,9 @@ footer{
 	bottom: 0;
 	right: 1%;
 }
+
+
+
 
 
 </style>

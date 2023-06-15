@@ -7,6 +7,7 @@ public class Player extends Drawer {
 	private ArrayList<String> stringHand = new ArrayList<>();
 	private boolean stand = false;
 	private String result = null;
+	private boolean blackJack = false;
 	
 	public Player() {
 		super();
@@ -66,6 +67,17 @@ public class Player extends Drawer {
 	public ArrayList<String> getStringHand(){
 		return stringHand;
 	}
+	
+	public boolean isBlackJack(){
+		return blackJack;
+	}
+	
+	public void setBlackJack() {
+		this.blackJack = true;
+	}
+	
+	
+	
 	
 	public String scoreMessage() {
 		if(hand.getExistA() && hand.getMaxScore() < 21) {

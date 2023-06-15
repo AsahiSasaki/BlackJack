@@ -85,6 +85,7 @@ public class Dealer extends Drawer{
 		if(playerScore > dealerScore) {
 			resultMessage =  "ブラックジャック！！あなたの勝ちです";
 			player.setResult("win");
+			player.setBlackJack();
 		}
 		if(playerScore < dealerScore) {
 			resultMessage =  "ディーラーのブラックジャックあなたの負けです";
@@ -95,6 +96,23 @@ public class Dealer extends Drawer{
 			player.setResult("draw");
 		}
 		return resultMessage;
+	}
+	
+	public int calChip(int betChip, String result, boolean isBlackJack) {
+		int ans = 0;
+		switch(result) {
+			case "win":
+				if(isBlackJack) {
+					ans = (int)(betChip*2.5);
+				}else {
+					ans = betChip*2; 
+				}
+			case "lose":
+				break;
+			case "draw":
+				ans = betChip;
+		}
+		return ans;
 	}
 
 }

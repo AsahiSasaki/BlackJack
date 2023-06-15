@@ -67,7 +67,9 @@ button.link-style-btn.logout{
 <title>メニュー</title>
 </head>
 <body>
-
+<%
+session.removeAttribute("betChip");
+%>
 <div class="menue">
 <div class="text">
 

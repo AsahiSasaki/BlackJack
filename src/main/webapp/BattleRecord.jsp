@@ -70,15 +70,15 @@ button:hover {
 <p><button type="submit" class="menu">Menu</button></p>
 </form>
 
-
+<%int loginId = Integer.parseInt((String)session.getAttribute("userId"));
+UserDao ud = new UserDao();%>
 <div class="record">
 <div class="subject"><%=session.getAttribute("loginuser") %>さんの成績</div>
 <p><%=session.getAttribute("battleRecord")%><br>
-チップの保有枚数：<%=session.getAttribute("userChip")%>枚</p>
-<div class="subject">チップ保有枚数トップ5</div>
+チップの保有枚数：<%=ud.getChip(loginId) %>枚</p>
+<div class="subject">チップ所持枚数トップ5</div>
 
 <%	BattleRecordDao brd = new BattleRecordDao();
-	UserDao ud = new UserDao();
 	ArrayList<Integer> topFive = brd.getTopFive();%>
 	<table width=30% align="center"><% 
 	for(int i=0; i < topFive.size();i++) {
