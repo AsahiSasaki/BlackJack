@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.ResultRecordDao;
-import dao.UserDao;
 import exception.DataBaseException;
 import model.Card;
 import model.Dealer;
@@ -35,7 +34,7 @@ public class BlackJackServlet extends HttpServlet {
 			rd.forward(request, response);
 		}
 		
-		//最初だけgameの初期設定を行う。
+		//最初に来た時だけgameの初期設定を行う。
 		if(session.getAttribute("gameManagement") == null) {
 			GameManagement gm = new GameManagement();
 			session.setAttribute("gameManagement", gm);
@@ -55,19 +54,20 @@ public class BlackJackServlet extends HttpServlet {
 		
 		//チップが設定されていない場合、なにもせずにそのまま画面に戻す
 		if(request.getParameter("betChip")==null & session.getAttribute("betChip")==null) {
-			
+			response.sendRedirect("BlackJack.jsp");
 		}else {	
 			int userId = Integer.parseInt((String)session.getAttribute("userId"));
+			
 			if(request.getParameter("betChip") != null) {
 				int betChip = Integer.parseInt((String)request.getParameter("betChip"));
 				session.setAttribute("betChip", betChip);
 			}
 			int betChip = (Integer)session.getAttribute("betChip");
 			
+			//チップを賭けた分手持ちを減らす
 			try{
-				
-				UserDao ud = new UserDao();
-				ud.updateChip(userId, -betChip);
+				ResultRecordDao rrd = new ResultRecordDao();
+				rrd.updateChip(userId, -betChip);
 			}catch (DataBaseException e) {
 				e.printStackTrace();
 			}
@@ -94,28 +94,30 @@ public class BlackJackServlet extends HttpServlet {
 				try{
 					ResultRecordDao rrd = new ResultRecordDao(); 
 					rrd.recordResult(userId, player.getResult());
-					UserDao ud = new UserDao();
-					ud.updateChip(userId, dealer.calChip(betChip, player.getResult(), player.isBlackJack()));
+					rrd.updateChip(userId, dealer.calChip(betChip, player.getResult(), player.isBlackJack()));
 					
 				}catch (DataBaseException e) {
 					e.printStackTrace();
 				}
-				
+				RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
+				rd.forward(request, response);
+			}else {
+				response.sendRedirect("BlackJack.jsp");
 			}
-		}
+			
+		}	
 		
-		
-		RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
-		rd.forward(request, response);
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		HttpSession session = request.getSession();
-
+		
 		GameManagement gm = (GameManagement)session.getAttribute("gameManagement");
+		
 		Player player = (Player)session.getAttribute("player");
 		Dealer dealer = (Dealer)session.getAttribute("dealer");
+		@SuppressWarnings("unchecked")
 		ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
 
 		
@@ -132,7 +134,6 @@ public class BlackJackServlet extends HttpServlet {
 				break;
 			case "stand":
 				dealer.action(deck);
-				request.setAttribute("dealerAction", dealer.getActionMessage());
 				gm.setPhase("RESULT");
 				gm.setClose();
 				break;
@@ -148,15 +149,15 @@ public class BlackJackServlet extends HttpServlet {
 				int userId = Integer.parseInt((String)session.getAttribute("userId"));
 				ResultRecordDao rrd = new ResultRecordDao(); 
 				rrd.recordResult(userId, player.getResult());
-				UserDao ud = new UserDao();
-				ud.updateChip(userId, dealer.calChip(betChip, player.getResult(), player.isBlackJack()));
+				rrd.updateChip(userId, dealer.calChip(betChip, player.getResult(), player.isBlackJack()));
 			}catch (DataBaseException e) {
 				e.printStackTrace();
 			}
+			RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
+			rd.forward(request, response);
+		}else {
+			response.sendRedirect("BlackJack.jsp");
 		}
-		
-		RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
-		rd.forward(request, response);
 		
 	}
 

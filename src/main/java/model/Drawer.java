@@ -24,4 +24,14 @@ public class Drawer {
 		}
 		return this.bust;
 	}
+	
+	public void initialHand(ArrayList<Card> deck) {
+		
+		drawCard(deck);
+		drawCard(deck);
+	}
+	
+	public String scoreMessage() {
+		return String.valueOf(hand.getFinalScore());
+	}
 }

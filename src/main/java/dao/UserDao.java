@@ -199,40 +199,22 @@ public class UserDao extends BaseDao {
 	}
 	
 	//ユーザーのチップ数を取得するメソッド
-		public int getChip(int userId) throws DataBaseException{
-			int chip = 0;
+	public int getChip(int userId) throws DataBaseException{
+		int chip = 0;
 				
-			try {
-				String sql = "select chip from user where user_id = ? ";
-				ps = con.prepareStatement(sql);
-				ps.setInt(1, userId);
-				rs = ps.executeQuery();
+		try {
+			String sql = "select chip from user where user_id = ? ";
+			ps = con.prepareStatement(sql);
+			ps.setInt(1, userId);
+			rs = ps.executeQuery();
 					
-				while(rs.next()) {
-					chip = rs.getInt("chip");
-				}	
-			}catch(SQLException e) {
-				e.printStackTrace();
-				throw new DataBaseException("チップを取得できませんでした");
-			}
-			return chip;
+			while(rs.next()) {
+				chip = rs.getInt("chip");
+			}	
+		}catch(SQLException e) {
+			e.printStackTrace();
+			throw new DataBaseException("チップを取得できませんでした");
 		}
-		
-	//ユーザーIDとチップの数を引数とし、現在のチップ数を更新
-		public int updateChip(int userId, int chip) throws DataBaseException{
-				
-			try {
-				String sql = "update user set chip = chip + ? where user_id = ? ";
-				ps = con.prepareStatement(sql);
-				ps.setInt(1, chip);
-				ps.setInt(2, userId);
-				ps.executeUpdate();
-				
-			}catch(SQLException e) {
-				e.printStackTrace();
-				throw new DataBaseException("チップを記入できませんでした");
-			}
-			return chip;
-		}	
-
+		return chip;
+	}
 }

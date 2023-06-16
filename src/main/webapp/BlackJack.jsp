@@ -66,7 +66,14 @@ button{
    	border: 0;
    	background-color: #005FFF;
    	color: #FFFF22;
-   	 cursor: pointer;
+   	cursor: pointer;
+   	box-shadow: 0px 5px 0 #000;
+    transition: .3
+}
+
+button:hover {
+  transform: translate3d(0, 5px, 0);
+  box-shadow: none;
 }
 
 .hit{
@@ -153,6 +160,17 @@ button{
    	color: #000000;
 }
 
+.nowBet{
+	position: fixed;
+	bottom: 23.6%;
+	right: 5%;
+	width: 20%;
+    height: 70px;
+    margin: 10px;
+    font-size: 300% ;
+   	color: #000000;
+   	font-family: "Impact";
+}
 
 
 .result{
@@ -204,6 +222,12 @@ button{
     font-family: "Impact";
 }
 
+.chip input:hover+label{
+	color: #000000;
+    background: #FFFFFF;
+    border: 25px solid #FF3333;
+ }
+ 
 .chip input:checked+label{
     background: #FFFFFF;
     color: #000000;
@@ -213,11 +237,7 @@ button{
     display: none;
 }
 
-.chip input:hover+label{
-	color: #000000;
-    background: #FFFFFF;
-    border: 25px solid #FF3333;
- }
+
 
 .center{
 	text-align: center;
@@ -277,9 +297,9 @@ switch(phase){
     	
     	<form action="BlackJackServlet">
     	<div class="center">
-    	<div class="betText">何枚賭けますか？</div>
+    	<div class="betText">いくら賭けますか？</div>
       	<div class="chip">
-    	<input type="radio" name="betChip" value="1" id="one"> <label for="one" >1</label>
+    	<input type="radio" name="betChip" value="1" id="one" checked> <label for="one" >1</label>
     	<input type="radio" name="betChip" value="2" id="two"> <label for="two" >2</label>
     	<input type="radio" name="betChip" value="3" id="three"> <label for="three" >3</label>
        	<input type="radio" name="betChip" value="4" id="four"> <label for="four" >4</label>
@@ -290,9 +310,9 @@ switch(phase){
     	<input type="radio" name="betChip" value="7" id="seven"> <label for="seven" >7</label>
     	<input type="radio" name="betChip" value="8" id="eight"> <label for="eight" >8</label>
     	<input type="radio" name="betChip" value="9" id="nine"> <label for="nine" >9</label>
-    	<input type="radio" name="betChip" value="10" id="ten" checked> <label for="ten" >10</label> 
+    	<input type="radio" name="betChip" value="10" id="ten" > <label for="ten" >10</label> 
 		</div>
-		<p><button type="submit" class="deal">Deal</button><p>
+		<p><button type="submit" class="deal">DEAL</button><p>
 		</div></form>
 		
 		<form action="Menu.jsp">
@@ -334,9 +354,11 @@ switch(phase){
 		<button type="submit" value="stand" name="action" class="stand">STAND</button></div>
 		</form>	
 		
+		<div class="nowBet">BET：<%=session.getAttribute("betChip") %></div>
+		
 		<%break;
 		
-	default :%>
+	case RESULT :%>
 		<div class="dealerhand"><%
 		for(Card card :dealerHand){%>
 			<img src="trump/<%=card.getIllustPath()%>">
@@ -363,6 +385,7 @@ switch(phase){
 		<button type="submit" class="changeBet" name="changeBet">BET額を変更</button>
 		</form>
 		
+		<div class="nowBet">BET：<%=session.getAttribute("betChip") %></div>
 		<%session.removeAttribute("gameManagement");
 		%>
 		<form action="Menu.jsp">
