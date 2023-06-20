@@ -27,20 +27,19 @@ public class UserManagementServlet extends HttpServlet {
 			request.setAttribute("message", "パスワードが違います");
 			RequestDispatcher rd = request.getRequestDispatcher("UserManagement.jsp");
 			rd.forward(request, response);
-		}
-		
-		try{
-			UserDao userDao = new UserDao();
-			userDao.deleteUser(loginID);	
-			request.setAttribute("message", "ユーザーを削除しました");
-		
+		}else {
+			try{
+				UserDao userDao = new UserDao();
+				userDao.deleteUser(loginID);	
+				request.setAttribute("message", "ユーザーを削除しました");
 			
-		}catch(DataBaseException e) {
-			String message = e.getMessage();
-			request.setAttribute("message", message);
-		}
-		
-		RequestDispatcher rd = request.getRequestDispatcher("TopPage.jsp");
-		rd.forward(request, response);
+				
+			}catch(DataBaseException e) {
+				String message = e.getMessage();
+				request.setAttribute("message", message);
+			}
+			RequestDispatcher rd = request.getRequestDispatcher("TopPage.jsp");
+			rd.forward(request, response);
+		}	
 	}
 }

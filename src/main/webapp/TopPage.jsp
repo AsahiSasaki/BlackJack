@@ -41,12 +41,9 @@ footer{
 }
 
 
-
-
-
 </style>
 <meta charset="UTF-8">
-<title>トップページ</title>
+<title>トップ</title>
 </head>
 <body>
 <h1>BLACK JACK</h1>
@@ -58,7 +55,7 @@ footer{
 	<% 
 	} %>
 <form action="LoginServlet" method="post">
-<p><input type="text" name="loginID" placeholder="UserID" required="true"/></p>
+<p><input type="text" name="loginID" placeholder="UserID" required="true"  maxlength="9"/></p>
 <p><input type="text" name="loginPassword" placeholder="Password" required="true"/></p>
 <p><button type="submit">ログイン</button></p>
 </form>

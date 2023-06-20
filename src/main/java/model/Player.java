@@ -35,4 +35,12 @@ public class Player extends Drawer {
 		}
 	}
 	
+	public boolean possibleSplit() {
+		boolean possibleSplit = false;
+		if(hand.getHand().get(0).getScore() == hand.getHand().get(1).getScore()) {
+			possibleSplit = true;
+		}
+		return possibleSplit;
+	}
+	
 }

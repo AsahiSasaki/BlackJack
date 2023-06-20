@@ -86,6 +86,11 @@ button:hover {
 	background-color: #FF8C00;
 }
 
+.split{
+	color: #FF0000;	
+	background-color: #FFFF4D;
+}
+
 .balloon-right {
   position: absolute;
   display: inline-block;
@@ -326,9 +331,8 @@ switch(phase){
 	case PLAYERTURN :%>	
 	
 		<!-- ディーラーの手札 -->
-		<div class="dealerhand"><% 
-		Card card1 =dealerHand.get(0);%>
-		<img src="trump/<%=card1.getIllustPath()%>">
+		<div class="dealerhand">
+		<img src="trump/<%=dealerHand.get(0).getIllustPath()%>">
 		<img src="trump/card_back.png">
 		</div>
 		
@@ -391,9 +395,42 @@ switch(phase){
 		<form action="Menu.jsp">
 		<button type="submit" class="menue">メニューに戻る</button>
 		</form>
-    	
+    <% 	break;
+	case POSSIBLESPLIT:%>
 		
-<%
+		<!-- ディーラーの手札 -->
+		<div class="dealerhand">
+		<img src="trump/<%=dealerHand.get(0).getIllustPath()%>">
+		<img src="trump/card_back.png">
+		</div>
+		
+		<div class="dealerpoint">
+		<div class="balloon-right">
+    	<p>？<p>
+		</div></div>
+		
+		
+		<!-- プレイヤーの手札 -->
+		<div class="playerhand"><%
+		for(Card card :playerHand){%>
+		<img src="trump/<%=card.getIllustPath()%>">
+		<%
+		}%></div>
+		<div class="point">
+		<div class="balloon-right">
+    	<p><%=player.scoreMessage() %><p></div></div>
+		
+		<form action="BlackJackServlet" method="post">
+		<div class="action">
+		<button type="submit" value="split" name="split" class="split">SPLIT</button>
+		<button type="submit" value="hit" name="action" class="hit">HIT</button>
+		<button type="submit" value="stand" name="action" class="stand">STAND</button></div>
+		</form>	
+		
+		<div class="nowBet">BET：<%=session.getAttribute("betChip") %></div>
+		
+		<%break;
+
 }%>
 
 

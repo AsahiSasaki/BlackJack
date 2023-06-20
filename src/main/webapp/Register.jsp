@@ -30,8 +30,8 @@
 	<% 
 	} %>
 <form action="RegisterServlet" method="post">
-<p>ID:<input type="text" name="loginID" required="true"/></p>
-<p>パスワード:<input type="text" name="loginPassword" required="true"/></p>
+<p>ID:<input type="text" name="loginID" required="true" maxlength="9"/></p>
+<p>パスワード:<input type="text" name="loginPassword" required="true" maxlength="20"/></p>
 <p>パスワード確認:<input type="text" name="confirmationLoginPassword" required="true"/></p>
 <p>ニックネーム:<input type="text" name="nickname" required="true"/></p>
 <p><input type="submit" value="登録"/> </p>

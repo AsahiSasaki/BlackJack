@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -34,11 +33,11 @@ public class LoginServlet extends HttpServlet {
 		String nextpage = "null";
 		request.setCharacterEncoding("UTF-8");
 
-		int loginID = Integer.parseInt(request.getParameter("loginID"));
-		String loginPassword = request.getParameter("loginPassword");
 		//ログインIDとログインパスワードを取得
 		
 		try{
+			int loginID = Integer.parseInt(request.getParameter("loginID"));
+			String loginPassword = request.getParameter("loginPassword");
 			UserDao userDao = new UserDao();
 			User loginUser = userDao.doLogin(loginID, loginPassword);
 			
@@ -48,7 +47,6 @@ public class LoginServlet extends HttpServlet {
 			session.setAttribute("loginPassword", loginUser.getLoginPassword());
 			session.setAttribute("userChip", loginUser.getChip());
 			
-			userDao.close();
 			nextpage = "Menu.jsp";
 			
 		}catch(DataBaseException e) {
@@ -61,11 +59,7 @@ public class LoginServlet extends HttpServlet {
 			request.setAttribute("message", "IDには数字を入力してください");
 			request.setAttribute("error", "true");
 			nextpage = "TopPage.jsp";
-		}catch(SQLException e) {
-			
 		}
-		
-		//次の画面へ遷移
 		
 		RequestDispatcher rd = request.getRequestDispatcher(nextpage);
 		rd.forward(request, response);

@@ -25,13 +25,14 @@ public class RegisterServlet extends HttpServlet {
 		String next = "Register.jsp";
 		request.setCharacterEncoding("UTF-8");
 		
-		int loginId = Integer.parseInt(request.getParameter("loginID"));
+		
 		String userPassword = request.getParameter("loginPassword");
 		String confirmationPassword = request.getParameter("confirmationLoginPassword");
 		String userNickname = request.getParameter("nickname");
 		
 		if (userPassword.equals(confirmationPassword)) {
 			try{
+				int loginId = Integer.parseInt(request.getParameter("loginID"));
 				UserDao userDao = new UserDao();
 				//データベースにユーザーIDがあるか探す
 				String userId = userDao.findUserId(loginId); 
@@ -41,7 +42,7 @@ public class RegisterServlet extends HttpServlet {
 					userDao.createStudent(loginId, userPassword, userNickname);
 					next = "TopPage.jsp";
 					request.setAttribute("message", "登録しました");
-				//あったら更新
+				//あったらエラーメッセージを表示
 				}else {
 					request.setAttribute("message", "入力されたIDは既に使われています");
 				}
@@ -49,6 +50,9 @@ public class RegisterServlet extends HttpServlet {
 			}catch (DataBaseException e) {
 				request.setAttribute("error", "true");
 				e.printStackTrace();
+			}catch (NumberFormatException e) {
+				request.setAttribute("message", "IDには数字を入力してください");
+				request.setAttribute("error", "true");
 			}
 		}else {
 			request.setAttribute("message", "パスワードが一致しません");

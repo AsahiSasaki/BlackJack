@@ -46,7 +46,6 @@ public class BlackJackServlet extends HttpServlet {
 			session.setAttribute("dealer", dealer);	
 		}
 		
-		
 		//BET額の変更を押されたときはsession betChipを破棄する
 		if(request.getParameter("changeBet") != null) {
 			session.removeAttribute("betChip");
@@ -90,7 +89,6 @@ public class BlackJackServlet extends HttpServlet {
 				request.setAttribute("result", result);
 				gm.setPhase("RESULT");
 				//データベースへの書き込み
-			
 				try{
 					ResultRecordDao rrd = new ResultRecordDao(); 
 					rrd.recordResult(userId, player.getResult());
@@ -102,6 +100,9 @@ public class BlackJackServlet extends HttpServlet {
 				RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
 				rd.forward(request, response);
 			}else {
+				if(player.possibleSplit()) {
+					gm.setPhase("POSSIBLESPLIT");
+				}
 				response.sendRedirect("BlackJack.jsp");
 			}
 			
@@ -120,7 +121,7 @@ public class BlackJackServlet extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
 
-		
+	
 		//Playerが選択したactionによってスイッチ
 		switch(request.getParameter("action")) {
 			case "hit":

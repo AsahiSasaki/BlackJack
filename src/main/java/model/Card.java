@@ -5,6 +5,7 @@ public class Card {
 	private String suit;
 	private String rankString;
 	private String illustPath;
+	private int score;
 	
 	
 	public Card(String suit, int rank) {
@@ -12,6 +13,7 @@ public class Card {
 		this.suit = suit;
 		this.rankString = changePicture(rank);
 		this.illustPath= changeIllustPath(rank, suit);
+		this.score = calScore(rank);
 	}
 	
 	public int getRank() {
@@ -66,6 +68,18 @@ public class Card {
 	
 	public String getIllustPath() {
 		return illustPath;
+	}
+	
+	private int calScore(int rank) {
+		if(rank < 10) {
+			return rank;
+		}else {
+			return 10;
+		}
+	}
+	
+	public int getScore() {
+		return this.score;
 	}
 
 }

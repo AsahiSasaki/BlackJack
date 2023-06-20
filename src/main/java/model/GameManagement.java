@@ -15,6 +15,7 @@ public class GameManagement {
 //		プレイヤーがバースト、ディーラーがバースト、
 //		もしくは両者の手札が確定した場合結果の判定を行う段階をRESULT
 		INIT,
+		POSSIBLESPLIT,
 		PLAYERTURN,
 		DEALERTURN,
 		RESULT;
