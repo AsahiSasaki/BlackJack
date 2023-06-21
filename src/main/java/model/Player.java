@@ -1,31 +1,13 @@
 package model;
 
+import java.util.ArrayList;
+
 public class Player extends Drawer {
-	private String result = null;
-	private boolean blackJack = false;
+	private Hand splitHand = new Hand();
 	
 	public Player() {
 		super();
 	}
-	
-	
-	public void setResult(String result) {
-		this.result = result;
-	}
-	
-	public String getResult() {
-		return result;
-	}
-	
-	
-	public boolean isBlackJack(){
-		return blackJack;
-	}
-	
-	public void setBlackJack() {
-		this.blackJack = true;
-	}
-	
 	
 	public String scoreMessage() {
 		if(hand.getExistA() && hand.getMaxScore() < 21) {
@@ -43,4 +25,36 @@ public class Player extends Drawer {
 		return possibleSplit;
 	}
 	
+	public Card drawCard(ArrayList<Card> deck, Hand hand) {
+		Card card = deck.remove(0);
+		hand.getHand().add(card);
+		hand.calScore();
+		return card;
+	}	
+	
+	public void split() {
+		Card card = this.hand.getHand().remove(0);
+		splitHand.getHand().add(card);
+	}
+	
+	public Hand getSplitHand() {
+		return this.splitHand;
+	}
+	
+	public String splitScore() {
+		if(splitHand.getExistA() && splitHand.getMaxScore() < 21) {
+			return splitHand.getMinScore()+"/"+splitHand.getMaxScore();
+		}else{
+			return String.valueOf(splitHand.getFinalScore());
+		}
+	}
+	
+	public boolean judgeBust(Hand splitHand) {
+		boolean splitbust = false;
+		if(splitHand.getFinalScore() > 21) {
+			splitbust = true;
+		}
+	return splitbust;
+}
+
 }

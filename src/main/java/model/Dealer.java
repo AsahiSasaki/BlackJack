@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 
+import model.GameManagement.Result;
+
 public class Dealer extends Drawer{
 	
 	public Dealer() {
@@ -14,71 +16,88 @@ public class Dealer extends Drawer{
 		}
 	}
 	
-	public String compareScore(Player player) {
+	public void compareScore(GameManagement gm, Player player) {
 		int playerScore = player.getHand().getFinalScore();
 		int dealerScore = this.getHand().getFinalScore();
-		String resultMessage = null;
+	
 		if(player.judgeBust()) {
-			resultMessage = "バーストしました。あなたの負けです。対戦ありがとうございました";
-			player.setResult("lose");
+			gm.setResult("LOSE_BUST");
 		}
-		if(judgeBust()) {
-			resultMessage =  "ディーラーがバーストしました。あなたの勝ちです。";
-			player.setResult("win");
+		if(judgeBust() && !player.judgeBust()) {
+			gm.setResult("WIN_BUST");
 		}
 		if(!judgeBust() && !player.judgeBust()) {
 			if(playerScore > dealerScore) {
-				resultMessage =  playerScore + "対" + dealerScore + "であなたの勝ちです";
-				player.setResult("win");
+				gm.setResult("WIN");
 			}
 			if(playerScore < dealerScore) {
-				resultMessage =  playerScore + "対" + dealerScore + "であなたの負けです";
-				player.setResult("lose");
+				gm.setResult("LOSE");
 			}
 			if(playerScore == dealerScore) {
-				resultMessage =  playerScore + "対" + dealerScore + "で引き分けです";
-				player.setResult("draw");
+				gm.setResult("DRAW");
 			}
 		}
-		return resultMessage;
 
 	}
 	
-	public String compareBJ(Player player) {
+	public void compareBJ(GameManagement gm, Player player) {
 		int playerScore = player.getHand().getFinalScore();
 		int dealerScore = this.getHand().getFinalScore();
-		String resultMessage = null;
+	
 		if(playerScore > dealerScore) {
-			resultMessage =  "ブラックジャック！！あなたの勝ちです";
-			player.setResult("win");
-			player.setBlackJack();
+			gm.setResult("WIN_BJ");
 		}
 		if(playerScore < dealerScore) {
-			resultMessage =  "ディーラーのブラックジャックあなたの負けです";
-			player.setResult("lose");
+			gm.setResult("LOSE_BJ");
 		}
 		if(playerScore == dealerScore) {
-			resultMessage =  "引き分けです";
-			player.setResult("draw");
+			gm.setResult("DRAW");
 		}
-		return resultMessage;
 	}
 	
-	public int calChip(int betChip, String result, boolean isBlackJack) {
+	public int calChip(int betChip, Result result) {
 		int ans = 0;
 		switch(result) {
-			case "win":
-				if(isBlackJack) {
-					ans = (int)(betChip*2.5);
-				}else {
-					ans = betChip*2; 
-				}
-			case "lose":
+			case WIN:
+				//breakしない
+			case WIN_BUST:
+				ans = betChip*2;
 				break;
-			case "draw":
+			case WIN_BJ:
+				ans = (int)(betChip*2.5);
+				break;
+			case LOSE:
+				//breakしない
+			case LOSE_BUST:
+				//breakしない
+			case LOSE_BJ:
+				break;
+			case DRAW:
 				ans = betChip;
 		}
 		return ans;
 	}
-
+	
+	public void compareSplitScore(GameManagement gm, Player player) {
+		int playerScore = player.getSplitHand().getFinalScore();
+		int dealerScore = this.getHand().getFinalScore();
+		
+		if(player.judgeBust(player.getSplitHand())) {
+			gm.setSplitResult("LOSE_BUST");
+		}
+		if(judgeBust() && !player.judgeBust(player.getSplitHand())) {
+			gm.setSplitResult("WIN_BUST");
+		}
+		if(!judgeBust() && !player.judgeBust(player.getSplitHand())) {
+			if(playerScore > dealerScore) {
+				gm.setSplitResult("WIN");
+			}
+			if(playerScore < dealerScore) {
+				gm.setSplitResult("LOSE");
+			}
+			if(playerScore == dealerScore) {
+				gm.setSplitResult("DRAW");
+			}
+		}
+	}
 }

@@ -34,4 +34,6 @@ public class Drawer {
 	public String scoreMessage() {
 		return String.valueOf(hand.getFinalScore());
 	}
+	
+	
 }

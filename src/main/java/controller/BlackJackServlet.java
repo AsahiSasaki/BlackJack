@@ -85,14 +85,15 @@ public class BlackJackServlet extends HttpServlet {
 			
 			//もしこの時点で21点だった場合はナチュラルブラックジャックでRESULTへ移動
 			if(player.getHand().getFinalScore() == 21 || dealer.getHand().getFinalScore() == 21){
-				String result = dealer.compareBJ(player);
-				request.setAttribute("result", result);
+				dealer.compareBJ(gm, player);
+	
+				request.setAttribute("result", gm.getResultMessage(gm.getResult()));
 				gm.setPhase("RESULT");
 				//データベースへの書き込み
 				try{
 					ResultRecordDao rrd = new ResultRecordDao(); 
-					rrd.recordResult(userId, player.getResult());
-					rrd.updateChip(userId, dealer.calChip(betChip, player.getResult(), player.isBlackJack()));
+					rrd.recordResult(userId, gm.getResult());
+					rrd.updateChip(userId, dealer.calChip(betChip, gm.getResult()));
 					
 				}catch (DataBaseException e) {
 					e.printStackTrace();
@@ -121,44 +122,127 @@ public class BlackJackServlet extends HttpServlet {
 		@SuppressWarnings("unchecked")
 		ArrayList<Card> deck = (ArrayList<Card>)session.getAttribute("deck");
 
-	
-		//Playerが選択したactionによってスイッチ
-		switch(request.getParameter("action")) {
-			case "hit":
-				player.drawCard(deck);
+		
+		
+		switch(gm.getPhase()) {
+			default:
+				//Playerが選択したactionによってスイッチ
+				switch(request.getParameter("action")) {
+					case "hit":
+						player.drawCard(deck);
+						
+						//Playerがバーストしていた場合
+						if(player.judgeBust()) {
+							gm.setPhase("RESULT");
+							gm.setClose();
+						}
+						break;
+					case "stand":
+						dealer.action(deck);
+						gm.setPhase("RESULT");
+						gm.setClose();
+						break;
+					case "split":
+						player.split();
+						player.drawCard(deck, player.getHand());
+						player.drawCard(deck, player.getSplitHand());
+						gm.setPhase("SPLIT_A");
+						try{
+							int betChip=(Integer)session.getAttribute("betChip");
+							int userId = Integer.parseInt((String)session.getAttribute("userId"));
+							ResultRecordDao rrd = new ResultRecordDao();
+							rrd.updateChip(userId, -betChip);
+						}catch (DataBaseException e) {
+							e.printStackTrace();
+						}
+				}
 				
-				//Playerがバーストしていた場合
-				if(player.judgeBust()) {
-					gm.setPhase("RESULT");
-					gm.setClose();
+				//ゲームが終了した時
+				if(gm.getClose()) {
+					//ディーラーに勝敗判定をしてもらう
+					dealer.compareScore(gm, player);
+					request.setAttribute("result", gm.getResultMessage(gm.getResult()));
+					//結果をデータベースに書き込む
+					try{
+						int betChip=(Integer)session.getAttribute("betChip");
+						int userId = Integer.parseInt((String)session.getAttribute("userId"));
+						ResultRecordDao rrd = new ResultRecordDao(); 
+						rrd.recordResult(userId, gm.getResult());
+						rrd.updateChip(userId, dealer.calChip(betChip, gm.getResult()));
+					}catch (DataBaseException e) {
+						e.printStackTrace();
+					}
+					RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
+					rd.forward(request, response);
+				}else {
+					response.sendRedirect("BlackJack.jsp");
 				}
 				break;
-			case "stand":
-				dealer.action(deck);
-				gm.setPhase("RESULT");
-				gm.setClose();
+			
+			case SPLIT_A:
+				switch(request.getParameter("action")) {
+				case "hit":
+					player.drawCard(deck);
+					
+					//Playerがバーストしていた場合
+					if(player.judgeBust()) {
+						gm.setPhase("SPLIT_B");
+					}
+					break;
+				case "stand":
+					gm.setPhase("SPLIT_B");
+					break;
+				}
+				response.sendRedirect("BlackJack.jsp");
 				break;
-		}
-		
-		//ゲームが終了した時
-		if(gm.getClose()) {
-			//ディーラーに勝敗判定をしてもらう
-			request.setAttribute("result", dealer.compareScore(player));
-			//結果をデータベースに書き込む
-			try{
-				int betChip=(Integer)session.getAttribute("betChip");
-				int userId = Integer.parseInt((String)session.getAttribute("userId"));
-				ResultRecordDao rrd = new ResultRecordDao(); 
-				rrd.recordResult(userId, player.getResult());
-				rrd.updateChip(userId, dealer.calChip(betChip, player.getResult(), player.isBlackJack()));
-			}catch (DataBaseException e) {
-				e.printStackTrace();
-			}
-			RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
-			rd.forward(request, response);
-		}else {
-			response.sendRedirect("BlackJack.jsp");
-		}
+			
+			case SPLIT_B:
+				switch(request.getParameter("action")) {
+				case "hit":
+					player.drawCard(deck, player.getSplitHand());
+					
+					//Playerの手札Bがバーストしていた場合
+					if(player.judgeBust(player.getSplitHand())) {
+						//手札Aがバーストしていなかった場合はディーラーが引く
+						if(!player.judgeBust()) {
+							dealer.action(deck);
+						}
+						gm.setPhase("SPLIT_RESULT");
+						gm.setClose();
+					}
+					break;
+				case "stand":
+					dealer.action(deck);
+					gm.setPhase("SPLIT_RESULT");
+					gm.setClose();
+				}
+				
+				if(gm.getClose()) {
+					//ディーラーに勝敗判定をしてもらう
+					dealer.compareScore(gm, player);
+					dealer.compareSplitScore(gm, player);	
+					request.setAttribute("resultA", gm.getResultMessage(gm.getResult()));
+					request.setAttribute("resultB", gm.getResultMessage(gm.getSplitResult()));
+					
+					//結果をデータベースに書き込む
+					try{
+						int betChip=(Integer)session.getAttribute("betChip");
+						int userId = Integer.parseInt((String)session.getAttribute("userId"));
+						ResultRecordDao rrd = new ResultRecordDao(); 
+						rrd.recordResult(userId, gm.getResult());
+						rrd.recordResult(userId, gm.getSplitResult());
+						rrd.updateChip(userId, dealer.calChip(betChip, gm.getResult()));
+						rrd.updateChip(userId, dealer.calChip(betChip, gm.getSplitResult()));
+					}catch (DataBaseException e) {
+						e.printStackTrace();
+					}
+					RequestDispatcher rd = request.getRequestDispatcher("BlackJack.jsp");
+					rd.forward(request, response);
+				}else {
+					response.sendRedirect("BlackJack.jsp");
+				}
+				break;
+		} 
 		
 	}
 

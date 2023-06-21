@@ -53,8 +53,51 @@ img{
     margin-top: 110px;
 }
 
+.playerhandA{
+	position: absolute;
+	height: 220px;
+    width: auto;
+    display: flex;
+    margin-top: 110px;
+    justify-content: left;
+}
+
+.playerhandAunder{
+	position: absolute;
+	height: 220px;
+    width: auto;
+    display: flex;
+    margin-top: 110px;
+    justify-content: left;
+    border-bottom: double 30px #FF0000;
+}
+
+.playerhandB{
+	position: absolute;
+	height: 220px;
+    width: auto;
+    display: flex;
+    margin-top: 110px;
+    left: 50%;
+}
+
+.playerhandBunder{
+	position: absolute;
+	height: 220px;
+    width: auto;
+    display: flex;
+    margin-top: 110px;
+    left: 50%;
+    border-bottom: double 30px #FF0000;
+}
+
 .action{
 	margin-top: 130px;
+	text-align: center;
+}
+
+.splitaction{
+	margin-top: 470px;
 	text-align: center;
 }
 
@@ -119,8 +162,40 @@ button:hover {
   border: 15px solid transparent;
   border-left: 15px solid #ff8e9d;
   z-index: 0;
-  -webkit-transform: rotate(-45deg);
+  -webkit-transform: rotate(45deg);
   transform: rotate(-45deg);
+}
+
+.balloon-left {
+  position: absolute;
+  display: inline-block;
+  margin: 1.5em 15px 1.5em 0;
+  padding: 0 5px;
+  width: 110px;
+  height: 110px;
+  line-height: 55px;
+  text-align: center;
+  color: #FFF;
+  background: #ff8e9d;
+  font-size: 30px;
+  font-weight: bold;
+  border-radius: 50%;
+  box-sizing: border-box;
+
+}
+
+ 
+.balloon-left:before {
+  content: "";
+  position: absolute;
+  bottom: 88px;
+  left: -8px;
+  margin-top: -15px;
+  border: 15px solid transparent;
+  border-left: 15px solid #ff8e9d;
+  z-index: 0;
+  -webkit-transform: rotate(135deg);
+  transform: rotate(225deg);
 }
 
 
@@ -130,7 +205,18 @@ button:hover {
 	position: absolute;
     top: 66%;
     left:36.5%;
-    
+}
+
+.pointA{
+	position: absolute;
+    top: 70%;
+    left:16.5%;
+}
+
+.pointB{
+	position: absolute;
+    top: 70%;
+    left:66.5%;
 }
 
 .dealerpoint{
@@ -167,8 +253,8 @@ button:hover {
 
 .nowBet{
 	position: fixed;
-	bottom: 23.6%;
-	right: 5%;
+	bottom: 20.6%;
+	left: 85%;
 	width: 20%;
     height: 70px;
     margin: 10px;
@@ -185,6 +271,21 @@ button:hover {
 	font-size: 170% ;
 }
 
+.resultA{
+	position: absolute;
+	font-weight: bold;	
+	font-size: 170% ;
+	left: 2%;
+	top: 70%;
+}
+
+.resultB{
+	position: absolute;
+	font-weight: bold;	
+	font-size: 170% ;
+	left: 52%;
+	top: 70%;
+}
 .next, .deal{
     width: 20%;
     height: 70px;
@@ -195,6 +296,12 @@ button:hover {
    	color: #FFFF22;
 }
 
+.splitresult{
+	font-weight: bold;
+	text-align: center;	
+	font-size: 170% ;
+	margin-top: 500px;
+}
 .deal{
 	position: absolute;
 	bottom: 2.4%;
@@ -278,6 +385,7 @@ GameManagement gm = (GameManagement)session.getAttribute("gameManagement");
 Phase phase = gm.getPhase();
 Player player = (Player)session.getAttribute("player");
 ArrayList<Card> playerHand = player.getHand().getHand();
+ArrayList<Card> splitHand = player.getSplitHand().getHand();
 Dealer dealer = (Dealer)session.getAttribute("dealer");
 ArrayList<Card> dealerHand = dealer.getHand().getHand();
 UserDao ud = new UserDao();
@@ -396,6 +504,7 @@ switch(phase){
 		<button type="submit" class="menue">メニューに戻る</button>
 		</form>
     <% 	break;
+	
 	case POSSIBLESPLIT:%>
 		
 		<!-- ディーラーの手札 -->
@@ -422,7 +531,7 @@ switch(phase){
 		
 		<form action="BlackJackServlet" method="post">
 		<div class="action">
-		<button type="submit" value="split" name="split" class="split">SPLIT</button>
+		<button type="submit" value="split" name="action" class="split">SPLIT</button>
 		<button type="submit" value="hit" name="action" class="hit">HIT</button>
 		<button type="submit" value="stand" name="action" class="stand">STAND</button></div>
 		</form>	
@@ -430,6 +539,151 @@ switch(phase){
 		<div class="nowBet">BET：<%=session.getAttribute("betChip") %></div>
 		
 		<%break;
+	
+	case SPLIT_A:%>
+
+	<!-- ディーラーの手札 -->
+	<div class="dealerhand">
+	<img src="trump/<%=dealerHand.get(0).getIllustPath()%>">
+	<img src="trump/card_back.png">
+	</div>
+	<div class="dealerpoint">
+	<div class="balloon-right">
+	<p>？<p>
+	</div></div>
+	
+	
+	<!-- プレイヤーの手札A -->
+	<div class="playerhandAunder"><%
+	for(Card card :playerHand){%>
+	<img src="trump/<%=card.getIllustPath()%>">
+	<%
+	}%></div>
+	<div class="pointA">
+	<div class="balloon-left">
+    <p><%=player.scoreMessage() %><p></div></div>
+	
+	
+	<!-- プレイヤーの手札B -->
+	<div class="playerhandB"><%
+	for(Card card :splitHand){%>
+	<img src="trump/<%=card.getIllustPath()%>">
+	<%
+	}%></div>
+	<div class="pointB">
+	<div class="balloon-left">
+    <p><%=player.splitScore() %><p></div></div>
+	
+	
+	<form action="BlackJackServlet" method="post">
+	<div class="splitaction">
+	<button type="submit" value="hit" name="action" class="hit">HIT</button>
+	<button type="submit" value="stand" name="action" class="stand">STAND</button></div>
+	</form>	
+	
+	<div class="nowBet">BET：<%=session.getAttribute("betChip") %></div>
+	
+	<%break;
+	
+	case SPLIT_B:%>
+
+	<!-- ディーラーの手札 -->
+	<div class="dealerhand">
+	<img src="trump/<%=dealerHand.get(0).getIllustPath()%>">
+	<img src="trump/card_back.png">
+	</div>
+	<div class="dealerpoint">
+	<div class="balloon-right">
+	<p>？<p>
+	</div></div>
+	
+	
+	<!-- プレイヤーの手札A -->
+	<div class="playerhandA"><%
+	for(Card card :playerHand){%>
+	<img src="trump/<%=card.getIllustPath()%>">
+	<%
+	}%></div>
+	<div class="pointA">
+	<div class="balloon-left">
+    <p><%=player.getHand().getFinalScore() %><p></div></div>
+	
+	
+	<!-- プレイヤーの手札B -->
+	<div class="playerhandBunder"><%
+	for(Card card :splitHand){%>
+	<img src="trump/<%=card.getIllustPath()%>">
+	<%
+	}%></div>
+	<div class="pointB">
+	<div class="balloon-left">
+    <p><%=player.splitScore() %><p></div></div>
+	
+	
+	
+	<form action="BlackJackServlet" method="post">
+	<div class="splitaction">
+	<button type="submit" value="hit" name="action" class="hit">HIT</button>
+	<button type="submit" value="stand" name="action" class="stand">STAND</button></div>
+	</form>	
+	
+	<div class="nowBet">BET：<%=session.getAttribute("betChip") %></div>
+	
+	<%break;
+	
+	case SPLIT_RESULT:%>
+
+	<div class="dealerhand"><%
+		for(Card card :dealerHand){%>
+			<img src="trump/<%=card.getIllustPath()%>">
+		<%
+		} %></div>
+		<div class="dealerpoint">
+		<div class="balloon-right">
+    	<p><%=dealer.getHand().getFinalScore() %><p>
+		</div></div>
+	
+	
+	<!-- プレイヤーの手札A -->
+	<div class="playerhandA"><%
+	for(Card card :playerHand){%>
+	<img src="trump/<%=card.getIllustPath()%>">
+	<%
+	}%></div>
+	<div class="pointA">
+	<div class="balloon-left">
+    <p><%=player.getHand().getFinalScore() %><p></div></div>
+	
+	
+	<!-- プレイヤーの手札B -->
+	<div class="playerhandB"><%
+	for(Card card :splitHand){%>
+	<img src="trump/<%=card.getIllustPath()%>">
+	<%
+	}%></div>
+	<div class="pointB">
+	<div class="balloon-left">
+    <p><%=player.getSplitHand().getFinalScore() %><p></div></div>
+	
+	<div class="resultA"><%=request.getAttribute("resultA")%></div>
+	<div class="resultB"><%=request.getAttribute("resultB")%></div>
+	
+	<div class="nowBet">BET：<%=session.getAttribute("betChip") %></div>
+	
+	<form action="BlackJackServlet">
+	<div class="splitresult">
+	<button type="submit" class="next">NEXT GAME</button></div>
+	<button type="submit" class="changeBet" name="changeBet">BET額を変更</button>
+	</form>
+		
+	<div class="nowBet">BET：<%=session.getAttribute("betChip") %></div>
+	<%session.removeAttribute("gameManagement");
+	%>
+	<form action="Menu.jsp">
+	<button type="submit" class="menue">メニューに戻る</button>
+	</form>
+	
+	<%break;
 
 }%>
 
